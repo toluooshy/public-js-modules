@@ -2,6 +2,22 @@
 // This file demonstrates the expected format for remote modules
 
 /**
+ * Module metadata - contains info displayed in the drawer
+ */
+export const metadata = {
+  id: "remote-counter",
+  name: "Remote Counter",
+  description: "Counter loaded from remote ES module",
+  size: "1x1",
+  links: [
+    {
+      label: "Module Source",
+      url: "https://github.com/example/counter-module",
+    },
+  ],
+};
+
+/**
  * Main render function - called when the module is loaded
  * @param {HTMLElement} container - The container div to render into
  * @param {Object} options - Options including theme
