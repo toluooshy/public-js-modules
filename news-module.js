@@ -1,8 +1,8 @@
-// News Module for Momentos (Local news via geolocation)
+// News Module for Momentos (Local news with images)
 export const metadata = {
   id: "news",
   name: "Local News",
-  description: "Headlines based on user location",
+  description: "Headlines with images based on user location",
   size: "2x2",
 };
 
@@ -10,7 +10,6 @@ export async function render(container, options) {
   const { theme } = options;
   const isDark = theme === "dark";
 
-  // Initial loading message
   container.innerHTML = `
     <div style="
       padding: 15px; 
@@ -19,7 +18,6 @@ export async function render(container, options) {
     ">Detecting your location and loading news...</div>
   `;
 
-  // Helper: Fetch JSON safely
   const fetchJSON = async (url) => {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -27,7 +25,7 @@ export async function render(container, options) {
   };
 
   try {
-    // 1️⃣ Get user's geolocation
+    // 1️⃣ Get user geolocation
     const position = await new Promise((resolve, reject) => {
       if (!navigator.geolocation)
         reject(new Error("Geolocation not supported"));
@@ -37,7 +35,6 @@ export async function render(container, options) {
     const { latitude, longitude } = position.coords;
 
     // 2️⃣ Reverse geocode to get city
-    // Using OpenStreetMap Nominatim API (no API key needed, free)
     const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
     const locationData = await fetchJSON(nominatimUrl);
     const city =
@@ -52,28 +49,43 @@ export async function render(container, options) {
       `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`,
     );
 
-    // Build HTML for headlines
+    // Build HTML for headlines with images
     const newsHtml = rssData.items
-      .map(
-        (item) => `
-        <div style="
-          margin-bottom: 10px; 
-          padding-bottom: 10px; 
-          border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(128,128,128,0.3)"};
-        ">
-          <a href="${item.link}" target="_blank" style="
-            font-size: 14px; 
-            font-weight: 600; 
-            margin-bottom: 5px; 
-            color: ${isDark ? "#ffffff" : "#1a1a1a"};
-            text-decoration: none;
+      .map((item) => {
+        const imageUrl =
+          item.thumbnail || (item.enclosure && item.enclosure.link) || null;
+        return `
+          <div style="
+            margin-bottom: 10px; 
+            padding-bottom: 10px; 
+            border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(128,128,128,0.3)"};
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
           ">
-            ${item.title}
-          </a>
-          <div style="font-size: 12px; opacity: 0.7;">${new Date(item.pubDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
-        </div>
-      `,
-      )
+            ${
+              imageUrl
+                ? `<img src="${imageUrl}" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">`
+                : ""
+            }
+            <div style="flex: 1;">
+              <a href="${item.link}" target="_blank" style="
+                font-size: 14px; 
+                font-weight: 600; 
+                margin-bottom: 5px; 
+                color: ${isDark ? "#ffffff" : "#1a1a1a"};
+                text-decoration: none;
+                display: block;
+              ">
+                ${item.title}
+              </a>
+              <div style="font-size: 12px; opacity: 0.7;">
+                ${new Date(item.pubDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </div>
+            </div>
+          </div>
+        `;
+      })
       .join("");
 
     container.innerHTML = `
