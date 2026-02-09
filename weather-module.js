@@ -4,6 +4,7 @@ export const metadata = {
   name: "Weather",
   description: "Current weather based on user location (no API key)",
   size: "2x1",
+  intendedSize: { width: 240, height: 120 }, // Dev-intended size for 2x1
   links: [
     { label: "Weather.com", url: "https://weather.com" },
     { label: "Open-Meteo API", url: "https://open-meteo.com" },
@@ -38,10 +39,17 @@ export async function render(container, options) {
   const { theme } = options;
   const isDark = theme === "dark";
 
+  // Calculate zoom scale based on container vs intended size
+  const intendedWidth = metadata.intendedSize?.width || 240;
+  const intendedHeight = metadata.intendedSize?.height || 120;
+  const scaleX = container.clientWidth / intendedWidth;
+  const scaleY = container.clientHeight / intendedHeight;
+  const scale = Math.min(scaleX, scaleY);
+
   // Initial loading display
   container.innerHTML = `
     <div style="
-      padding: 20px; 
+      padding: ${Math.max(12, 15 * scale)}px; 
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -50,6 +58,7 @@ export async function render(container, options) {
       height: 100%;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: ${Math.max(11, 12 * scale)}px;
     ">Detecting your location and fetching weather...</div>
   `;
 
@@ -71,14 +80,29 @@ export async function render(container, options) {
       throw new Error(`Weather API error: ${weatherRes.status}`);
     const data = await weatherRes.json();
 
-    const temp = Math.round(data.current_weather.temperature);
+    const tempC = Math.round(data.current_weather.temperature);
+    // Determine if user is in US for Fahrenheit
+    let useF = false;
+    try {
+      const locRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+      );
+      if (locRes.ok) {
+        const locData = await locRes.json();
+        if (locData.address && locData.address.country_code === "us") {
+          useF = true;
+        }
+      }
+    } catch {}
+    const temp = useF ? Math.round((tempC * 9) / 5 + 32) : tempC;
+    const tempUnit = useF ? "°F" : "°C";
     const code = data.current_weather.weathercode;
     const weather = weatherCodeMap[code] || { icon: "❓", desc: "Unknown" };
 
     // 3️⃣ Render weather display
     container.innerHTML = `
       <div style="
-        padding: 20px; 
+        padding: ${Math.max(9.6, 12 * scale * 0.8)}px; 
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -87,10 +111,11 @@ export async function render(container, options) {
         height: 100%;
         color: ${isDark ? "#ffffff" : "#1a1a1a"};
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: ${Math.max(8.8, 12 * scale * 0.8)}px;
       ">
-        <div style="font-size: 48px; margin-bottom: 10px;">${weather.icon}</div>
-        <div style="font-size: 24px; font-weight: bold;">${temp}°C</div>
-        <div style="font-size: 14px; opacity: 0.7; margin-top: 5px;">${weather.desc}</div>
+        <div style="font-size: ${Math.max(25.6, 32 * scale * 0.8)}px; margin-bottom: ${Math.max(4.8, 6 * scale * 0.8)}px;">${weather.icon}</div>
+        <div style="font-size: ${Math.max(14.4, 18 * scale * 0.8)}px; font-weight: 400;">${temp}${tempUnit}</div>
+        <div style="font-size: ${Math.max(8, 10 * scale * 0.8)}px; opacity: 0.7; margin-top: ${Math.max(2.4, 3 * scale * 0.8)}px;">${weather.desc}</div>
       </div>
     `;
   } catch (err) {

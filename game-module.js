@@ -4,11 +4,19 @@ export const metadata = {
   name: "Flappy Bird",
   description: "Tap to keep the bird flying and score points",
   size: "2x2",
+  intendedSize: { width: 240, height: 240 }, // Dev-intended size for 2x2
 };
 
 export function render(container, options) {
   const { theme } = options;
   const isDark = theme === "dark";
+
+  // Calculate zoom scale based on container vs intended size
+  const intendedWidth = metadata.intendedSize?.width || 240;
+  const intendedHeight = metadata.intendedSize?.height || 240;
+  const scaleX = container.clientWidth / intendedWidth;
+  const scaleY = container.clientHeight / intendedHeight;
+  const scale = Math.min(scaleX, scaleY);
 
   container.innerHTML = `
     <canvas style="width:100%; height:100%; display:block; background: ${isDark ? "#111" : "#87CEEB"};"></canvas>
@@ -24,10 +32,22 @@ export function render(container, options) {
   resize();
   window.addEventListener("resize", resize);
 
+  // Image assets
+  const birdImg = new window.Image();
+  birdImg.src =
+    "https://www.nicepng.com/png/detail/151-1515288_flappy-bird-png-jpg-download-flappy-bird-bird.png";
+  const pipeImg = new window.Image();
+  pipeImg.src =
+    "https://www.pikpng.com/pngl/b/33-332693_flappy-bird-pipe-png-clipart.png";
+  const bgImg = new window.Image();
+  bgImg.src = isDark
+    ? "https://cdn6.f-cdn.com/contestentries/137315/8319146/54a81de882e75_thumb900.jpg"
+    : "https://e0.pxfuel.com/wallpapers/488/135/desktop-wallpaper-flappy-bird-background.jpg";
+
   // Game variables
-  let bird = { x: 50, y: canvas.height / 2, width: 20, height: 20, dy: 0 };
-  let gravity = 0.6;
-  let lift = -10;
+  let bird = { x: 50, y: canvas.height / 2, width: 24, height: 24, dy: 0 };
+  let gravity = 0.35; // slower gravity
+  let lift = -6; // less aggressive up
   let pipes = [];
   let pipeWidth = 40;
   let pipeGap = 120;
@@ -51,22 +71,44 @@ export function render(container, options) {
   });
 
   function drawBird() {
-    ctx.fillStyle = "#FFD700";
-    ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    ctx.save();
+    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    ctx.restore();
   }
 
   function drawPipes() {
-    ctx.fillStyle = "#228B22";
     pipes.forEach((pipe) => {
-      ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
-      ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+      // Top pipe
+      ctx.save();
+      ctx.translate(pipe.x, pipe.top - pipeImg.height);
+      ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipeImg.height);
+      ctx.restore();
+      // Bottom pipe
+      ctx.save();
+      ctx.translate(pipe.x, canvas.height - pipe.bottom);
+      ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipeImg.height);
+      ctx.restore();
     });
   }
 
   function drawScore() {
-    ctx.fillStyle = isDark ? "#fff" : "#000";
-    ctx.font = "20px sans-serif";
-    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx.save();
+    ctx.fillStyle = "#fff";
+    ctx.font = `${Math.max(7, 8 * scale)}px Consolas, monospace`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText(`Score: ${score}`, canvas.width / 2, 8 * scale);
+    ctx.restore();
+  }
+
+  function drawGameOver() {
+    ctx.save();
+    ctx.fillStyle = "#fff";
+    ctx.font = `${Math.max(9, 11 * scale)}px Consolas, monospace`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("Game Over! Click to restart", canvas.width / 2, 28 * scale);
+    ctx.restore();
   }
 
   function update() {
@@ -113,18 +155,15 @@ export function render(container, options) {
   }
 
   function draw() {
-    // Clear
+    // Draw background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
     // Draw game elements
-    drawBird();
     drawPipes();
+    drawBird();
     drawScore();
-
     if (gameOver) {
-      ctx.fillStyle = "#FF0000";
-      ctx.font = "30px sans-serif";
-      ctx.fillText("Game Over! Click to restart", 20, canvas.height / 2);
+      drawGameOver();
     }
   }
 

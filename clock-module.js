@@ -5,6 +5,7 @@ export const metadata = {
   name: "Clock",
   description: "Local time",
   size: "1x1",
+  intendedSize: { width: 120, height: 120 }, // Dev-intended size for 1x1
   links: [
     { label: "Source Code", url: "https://github.com/example/clock-module" },
     { label: "Documentation", url: "https://docs.example.com/clock" },
@@ -15,13 +16,20 @@ export function render(container, options) {
   const { theme } = options;
   const isDark = theme === "dark";
 
+  // Calculate zoom scale based on container vs intended size
+  const intendedWidth = metadata.intendedSize?.width || 120;
+  const intendedHeight = metadata.intendedSize?.height || 120;
+  const scaleX = container.clientWidth / intendedWidth;
+  const scaleY = container.clientHeight / intendedHeight;
+  const scale = Math.min(scaleX, scaleY);
+
   // Create clock display
   container.innerHTML = `
     <div 
       id="clock" 
       style="
-        font-size: 24px; 
-        font-weight: bold; 
+        font-size: ${Math.max(16, 20 * scale)}px; 
+        font-weight: 400; 
         text-align: center;
         display: flex;
         align-items: center;
@@ -37,10 +45,17 @@ export function render(container, options) {
 
   function updateClock() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
-    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+    // Format: Feb 9, 2026 7:30:12 PM
+    const dateStr = now.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+    clockEl.textContent = dateStr;
   }
 
   updateClock();

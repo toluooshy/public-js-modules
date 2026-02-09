@@ -4,17 +4,26 @@ export const metadata = {
   name: "Local News",
   description: "Headlines with images based on user location",
   size: "2x2",
+  intendedSize: { width: 240, height: 240 }, // Dev-intended size for 2x2
 };
 
 export async function render(container, options) {
   const { theme } = options;
   const isDark = theme === "dark";
 
+  // Calculate zoom scale based on container vs intended size
+  const intendedWidth = metadata.intendedSize?.width || 240;
+  const intendedHeight = metadata.intendedSize?.height || 240;
+  const scaleX = container.clientWidth / intendedWidth;
+  const scaleY = container.clientHeight / intendedHeight;
+  const scale = Math.min(scaleX, scaleY);
+
   container.innerHTML = `
     <div style="
-      padding: 15px; 
+      padding: 12px; 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
+      font-size: ${Math.max(11, 12 * scale)}px;
     ">Detecting your location and loading news...</div>
   `;
 
@@ -56,30 +65,33 @@ export async function render(container, options) {
           item.thumbnail || (item.enclosure && item.enclosure.link) || null;
         return `
           <div style="
-            margin-bottom: 10px; 
-            padding-bottom: 10px; 
+            margin-bottom: ${Math.max(3, 4 * scale)}px;
+            padding-bottom: ${Math.max(3, 4 * scale)}px;
             border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(128,128,128,0.3)"};
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: ${Math.max(6, 8 * scale)}px;
           ">
             ${
               imageUrl
-                ? `<img src="${imageUrl}" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">`
+                ? `<img src="${imageUrl}" alt="" style="width: 100px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">`
                 : ""
             }
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 0;">
               <a href="${item.link}" target="_blank" style="
-                font-size: 14px; 
-                font-weight: 600; 
-                margin-bottom: 5px; 
+                font-size: ${Math.max(6, 7 * scale)}px;
+                font-weight: 400;
+                margin-bottom: ${Math.max(2, 2.5 * scale)}px;
                 color: ${isDark ? "#ffffff" : "#1a1a1a"};
                 text-decoration: none;
                 display: block;
+                line-height: 1.2;
+                white-space: normal;
+                overflow-wrap: break-word;
               ">
                 ${item.title}
               </a>
-              <div style="font-size: 12px; opacity: 0.7;">
+              <div style="font-size: ${Math.max(5, 5.5 * scale)}px; opacity: 0.7;">
                 ${new Date(item.pubDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </div>
             </div>
@@ -90,14 +102,14 @@ export async function render(container, options) {
 
     container.innerHTML = `
       <div style="
-        padding: 15px; 
-        overflow-y: auto; 
-        height: 100%; 
+        padding: ${Math.max(5, 6 * scale)}px;
+        overflow-y: auto;
+        height: 100%;
         width: 100%;
         color: ${isDark ? "#ffffff" : "#1a1a1a"};
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       ">
-        <div style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">📰 News for ${city}</div>
+        <div style="font-size: ${Math.max(7, 8 * scale)}px; font-weight: 400; margin-bottom: ${Math.max(5, 6 * scale)}px;">📰 News for ${city}</div>
         ${newsHtml || "<div>No local news found.</div>"}
       </div>
     `;
