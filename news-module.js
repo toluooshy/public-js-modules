@@ -61,8 +61,22 @@ export async function render(container, options) {
     // Build HTML for headlines with images
     const newsHtml = rssData.items
       .map((item) => {
-        const imageUrl =
+        // Try to extract image from thumbnail, enclosure, or media:content
+        let imageUrl =
           item.thumbnail || (item.enclosure && item.enclosure.link) || null;
+        // Try to extract from media:content if available (rss2json puts it in media object)
+        if (
+          !imageUrl &&
+          item.media &&
+          item.media.content &&
+          item.media.content.url
+        ) {
+          imageUrl = item.media.content.url;
+        }
+        // Fallback placeholder if no image
+        if (!imageUrl) {
+          imageUrl = "https://via.placeholder.com/100x60?text=No+Image";
+        }
         return `
           <div style="
             margin-bottom: ${Math.max(3, 4 * scale)}px;
@@ -72,11 +86,7 @@ export async function render(container, options) {
             align-items: flex-start;
             gap: ${Math.max(6, 8 * scale)}px;
           ">
-            ${
-              imageUrl
-                ? `<img src="${imageUrl}" alt="" style="width: 100px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">`
-                : ""
-            }
+            <img src="${imageUrl}" alt="" style="width: 100px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">
             <div style="flex: 1; min-width: 0;">
               <a href="${item.link}" target="_blank" style="
                 font-size: ${Math.max(6, 7 * scale)}px;
@@ -88,11 +98,24 @@ export async function render(container, options) {
                 line-height: 1.2;
                 white-space: normal;
                 overflow-wrap: break-word;
+                max-width: 240px;
               ">
                 ${item.title}
               </a>
               <div style="font-size: ${Math.max(5, 5.5 * scale)}px; opacity: 0.7;">
-                ${new Date(item.pubDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                ${(() => {
+                  const d = new Date(item.pubDate);
+                  const dateStr = d.toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  });
+                  const timeStr = d.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+                  return `${dateStr} ${timeStr}`;
+                })()}
               </div>
             </div>
           </div>

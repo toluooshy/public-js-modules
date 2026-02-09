@@ -19,10 +19,12 @@ export function render(container, options) {
   const scale = Math.min(scaleX, scaleY);
 
   container.innerHTML = `
-    <canvas style="width:100%; height:100%; display:block; background: ${isDark ? "#111" : "#87CEEB"};"></canvas>
+    <div id="flappy-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:2;"></div>
+    <canvas style="width:100%; height:100%; display:block; background: ${isDark ? "#111" : "#87CEEB"}; position:relative; z-index:1;"></canvas>
   `;
   const canvas = container.querySelector("canvas");
   const ctx = canvas.getContext("2d");
+  const overlay = container.querySelector("#flappy-overlay");
 
   // Resize canvas to container
   function resize() {
@@ -54,6 +56,7 @@ export function render(container, options) {
   let frame = 0;
   let score = 0;
   let gameOver = false;
+  let started = false;
 
   function reset() {
     bird.y = canvas.height / 2;
@@ -62,12 +65,34 @@ export function render(container, options) {
     frame = 0;
     score = 0;
     gameOver = false;
+    started = true;
+    hideOverlay();
   }
 
+  function showOverlay(html) {
+    overlay.innerHTML = html;
+    overlay.style.display = "flex";
+  }
+  function hideOverlay() {
+    overlay.innerHTML = "";
+    overlay.style.display = "none";
+  }
+
+  // Initial Play button
+  showOverlay(
+    `<button id="flappy-play-btn" style="font-size:${Math.max(24, 36 * scale)}px; padding: 16px 32px; border-radius: 8px; border:none; background:#ffeb3b; color:#222; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15);">Play</button>`,
+  );
+  overlay.querySelector("#flappy-play-btn").onclick = () => {
+    started = true;
+    hideOverlay();
+  };
+
   // Handle input (click/tap)
-  container.addEventListener("click", () => {
-    if (gameOver) reset();
-    bird.dy = lift;
+  container.addEventListener("click", (e) => {
+    if (!started) return;
+    if (gameOver) return;
+    // Only jump if click is on canvas (not overlay)
+    if (e.target === canvas) bird.dy = lift;
   });
 
   function drawBird() {
@@ -94,7 +119,7 @@ export function render(container, options) {
   function drawScore() {
     ctx.save();
     ctx.fillStyle = "#fff";
-    ctx.font = `${Math.max(7, 8 * scale)}px Consolas, monospace`;
+    ctx.font = `${Math.max(19, 20 * scale)}px Consolas, monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillText(`Score: ${score}`, canvas.width / 2, 8 * scale);
@@ -102,16 +127,20 @@ export function render(container, options) {
   }
 
   function drawGameOver() {
-    ctx.save();
-    ctx.fillStyle = "#fff";
-    ctx.font = `${Math.max(9, 11 * scale)}px Consolas, monospace`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillText("Game Over! Click to restart", canvas.width / 2, 28 * scale);
-    ctx.restore();
+    // Centered overlay for Game Over
+    showOverlay(`
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
+        <div style="font-size:${Math.max(36, 48 * scale)}px; color:#fff; font-family:Consolas,monospace; font-weight:bold; margin-bottom:24px; text-shadow:0 2px 8px #000;">Game Over!</div>
+        <button id="flappy-replay-btn" style="font-size:${Math.max(18, 24 * scale)}px; padding: 12px 28px; border-radius: 8px; border:none; background:#ffeb3b; color:#222; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15);">Replay</button>
+      </div>
+    `);
+    overlay.querySelector("#flappy-replay-btn").onclick = () => {
+      reset();
+    };
   }
 
   function update() {
+    if (!started) return;
     if (gameOver) return;
 
     // Gravity
@@ -159,11 +188,13 @@ export function render(container, options) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
     // Draw game elements
-    drawPipes();
-    drawBird();
-    drawScore();
-    if (gameOver) {
-      drawGameOver();
+    if (started) {
+      drawPipes();
+      drawBird();
+      drawScore();
+      if (gameOver) {
+        drawGameOver();
+      }
     }
   }
 
