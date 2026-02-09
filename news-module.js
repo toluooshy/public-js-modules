@@ -86,7 +86,7 @@ export async function render(container, options) {
             align-items: flex-start;
             gap: ${Math.max(6, 8 * scale)}px;
           ">
-            <img src="${imageUrl}" alt="" style="width: 100px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">
+            <img src="${imageUrl}" alt="" style="width: 80px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">
             <div style="flex: 1; min-width: 0;">
               <a href="${item.link}" target="_blank" style="
                 font-size: ${Math.max(6, 7 * scale)}px;
@@ -132,7 +132,7 @@ export async function render(container, options) {
         color: ${isDark ? "#ffffff" : "#1a1a1a"};
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       ">
-        <div style="font-size: ${Math.max(7, 8 * scale)}px; font-weight: 400; margin-bottom: ${Math.max(5, 6 * scale)}px;">📰 News for ${city}</div>
+        <div style="font-size: ${Math.max(10, 12 * scale)}px; font-weight: 400; margin-bottom: ${Math.max(5, 6 * scale)}px;">📰 News for ${city}</div>
         ${newsHtml || "<div>No local news found.</div>"}
       </div>
     `;

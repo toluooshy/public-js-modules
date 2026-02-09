@@ -20,11 +20,17 @@ export function render(container, options) {
 
   container.innerHTML = `
     <div id="flappy-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:2;"></div>
-    <canvas style="width:100%; height:100%; display:block; background: ${isDark ? "#111" : "#87CEEB"}; position:relative; z-index:1;"></canvas>
+    <div style="width:100%; height:100%; position:relative; border-radius:6px; overflow:hidden;">
+      <canvas style="width:100%; height:100%; display:block; background: ${isDark ? "#111" : "#87CEEB"}; position:relative; z-index:1; border-radius:6px;"></canvas>
+    </div>
   `;
   const canvas = container.querySelector("canvas");
   const ctx = canvas.getContext("2d");
   const overlay = container.querySelector("#flappy-overlay");
+
+  // Set background image to cover
+  canvas.style.backgroundSize = "cover";
+  canvas.style.backgroundRepeat = "no-repeat";
 
   // Resize canvas to container
   function resize() {
@@ -80,7 +86,7 @@ export function render(container, options) {
 
   // Initial Play button
   showOverlay(
-    `<button id="flappy-play-btn" style="font-size:${Math.max(24, 36 * scale)}px; padding: 16px 32px; border-radius: 8px; border:none; background:#ffeb3b; color:#222; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15);">Play</button>`,
+    `<button id="flappy-play-btn" style="font-size:${Math.max(24, 36 * scale)}px; padding: 16px 32px; border-radius:0; border:none; background:#ffeb3b; color:#222; font-family:Consolas,monospace; font-weight:bold; cursor:pointer;">Play</button>`,
   );
   overlay.querySelector("#flappy-play-btn").onclick = () => {
     started = true;
@@ -129,9 +135,9 @@ export function render(container, options) {
   function drawGameOver() {
     // Centered overlay for Game Over
     showOverlay(`
-      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
-        <div style="font-size:${Math.max(36, 48 * scale)}px; color:#fff; font-family:Consolas,monospace; font-weight:bold; margin-bottom:24px; text-shadow:0 2px 8px #000;">Game Over!</div>
-        <button id="flappy-replay-btn" style="font-size:${Math.max(18, 24 * scale)}px; padding: 12px 28px; border-radius: 8px; border:none; background:#ffeb3b; color:#222; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15);">Replay</button>
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
+        <div style="font-size:${Math.max(36, 48 * scale)}px; color:#fff; font-family:Consolas,monospace; font-weight:bold; margin-bottom:24px; text-align:center;">Game Over!</div>
+        <button id="flappy-replay-btn" style="font-size:${Math.max(18, 24 * scale)}px; padding: 12px 28px; border-radius:0; border:none; background:#ffeb3b; color:#222; font-family:Consolas,monospace; font-weight:bold; cursor:pointer;">Replay</button>
       </div>
     `);
     overlay.querySelector("#flappy-replay-btn").onclick = () => {
@@ -188,6 +194,7 @@ export function render(container, options) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
     // Draw game elements
+    ctx.font = `${Math.max(19, 20 * scale)}px Consolas, monospace`;
     if (started) {
       drawPipes();
       drawBird();
