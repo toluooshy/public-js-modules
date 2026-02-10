@@ -187,17 +187,22 @@ export function render(container, options) {
   }
 
   function drawPipes() {
-    const pipeH = pipeImg.height;
+    const scale = pipeWidth / pipeImg.width;
+    const pipeH = pipeImg.height * scale;
 
     pipes.forEach((pipe) => {
       const gapTop = pipe.gapY;
       const gapBottom = gapTop + pipeGap;
 
-      // ---------- TOP PIPE (stack upward, opening up) ----------
+      // ---------- TOP PIPE (stack upward) ----------
       for (let y = gapTop; y > -pipeH; y -= pipeH) {
         ctx.save();
         ctx.translate(pipe.x, y);
-        ctx.scale(1, -1); // flip vertically
+        ctx.scale(1, -1);
+
+        if (y % 2 === 0) {
+          ctx.scale(1, -1);
+        }
 
         ctx.drawImage(
           pipeImg,
@@ -214,23 +219,23 @@ export function render(container, options) {
         ctx.restore();
       }
 
-      // ---------- BOTTOM PIPE (stack downward, opening down) ----------
+      // ---------- BOTTOM PIPE (stack downward) ----------
       for (let y = gapBottom; y < canvas.height + pipeH; y += pipeH) {
-        ctx.save();
-        ctx.translate(pipe.x, y + pipeH);
-        ctx.scale(1, -1); // flip vertically for the mirrored effect
+        if (y % 2 === 0) {
+          ctx.scale(1, -1);
+        }
+
         ctx.drawImage(
           pipeImg,
           0,
           0,
           pipeImg.width,
           pipeImg.height,
-          0,
-          0,
+          pipe.x,
+          y,
           pipeWidth,
           pipeH,
         );
-        ctx.restore();
       }
     });
   }
