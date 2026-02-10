@@ -75,7 +75,7 @@ export function render(container, options) {
 
   const pipeImg = new Image();
   pipeImg.src =
-    "https://www.pikpng.com/pngl/b/33-332693_flappy-bird-pipe-png-clipart.png";
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Mario_pipe.png";
 
   const bgImg = new Image();
   bgImg.src = isDark
@@ -111,29 +111,32 @@ export function render(container, options) {
     frame = 0;
     score = 0;
     gameOver = false;
-    started = true;
+    started = false;
     hideOverlay();
+    // Show play button again
+    showPlayButton();
   }
 
-  // Initial Play button
-  showOverlay(`
-    <button id="flappy-play-btn" style="
-      font-size:${Math.max(24, 36 * scale)}px;
-      padding:16px 32px;
-      border:none;
-      border-radius:0;
-      background:#ffeb3b;
-      color:#222;
-      font-family:${FONT_FAMILY};
-      font-weight:400;
-      cursor:pointer;
-    ">PLAY</button>
-  `);
-
-  overlay.querySelector("#flappy-play-btn").onclick = () => {
-    started = true;
-    hideOverlay();
-  };
+  function showPlayButton() {
+    showOverlay(`
+      <button id="flappy-play-btn" style="
+        font-size:${Math.max(24, 36 * scale)}px;
+        padding:4px 8px;
+        border:none;
+        border-radius:0;
+        background:#ffeb3b;
+        color:#222;
+        font-family:${FONT_FAMILY};
+        font-weight:400;
+        cursor:pointer;
+      ">PLAY</button>
+    `);
+    overlay.querySelector("#flappy-play-btn").onclick = () => {
+      started = true;
+      hideOverlay();
+    };
+  }
+  showPlayButton();
 
   // Input
   container.addEventListener("click", (e) => {
@@ -199,13 +202,14 @@ export function render(container, options) {
           text-align:center;
         ">GAME OVER</div>
         <button id="flappy-replay-btn" style="
-          font-size:${Math.max(18, 24 * scale)}px;
-          padding:12px 28px;
+          font-size:${Math.max(24, 36 * scale)}px;
+          padding:4px 8px;
           border:none;
           border-radius:0;
           background:#ffeb3b;
           color:#222;
           font-family:${FONT_FAMILY};
+          font-weight:400;
           cursor:pointer;
         ">REPLAY</button>
       </div>
@@ -262,7 +266,7 @@ export function render(container, options) {
     if (imgAspect > canvasAspect) {
       // Image is wider than canvas
       drawHeight = canvas.height;
-      drawWidth = bgImg.width * (canvas.height / bgImg.height);
+      drawWidth = bgImg.width * (canvas.height / bgImg.height) + 10; // add extra to prevent gaps
     } else {
       // Image is taller than canvas
       drawWidth = canvas.width;

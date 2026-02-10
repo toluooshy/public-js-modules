@@ -84,8 +84,9 @@ export async function render(container, options) {
     // For each news item, fetch images in parallel
     const newsWithImages = await Promise.all(
       rssData.items.map(async (item) => {
-        // Headline image
-        let articleImage = await fetchFirstGoogleImage(item.title);
+        // Build search query for article thumbnail
+        const titleForQuery = item.title.replace(/\s+/g, "+");
+        let articleImage = await fetchFirstGoogleImage(titleForQuery);
         if (!articleImage) {
           articleImage =
             item.thumbnail || (item.enclosure && item.enclosure.link) || null;
@@ -94,14 +95,25 @@ export async function render(container, options) {
           articleImage = "https://via.placeholder.com/240x120?text=No+Image";
         }
 
-        // Outlet logo
-        let outletName =
-          item.source && item.source.title
-            ? item.source.title
-            : item.author || "Unknown";
-        let outletLogo = await fetchFirstGoogleImage(
-          outletName + " current logo wikipedia",
-        );
+        // Build search query for outlet/source image
+        let outletName = "Unknown";
+        let sourceQuery = null;
+        if (item.title.includes("-")) {
+          // Use the part after the last dash
+          sourceQuery = item.title.split("-").pop().trim().replace(/\s+/g, "+");
+          outletName = item.title.split("-").pop().trim();
+        } else if (item.source && item.source.title) {
+          outletName = item.source.title;
+          sourceQuery = item.source.title.replace(/\s+/g, "+");
+        } else if (item.author) {
+          outletName = item.author;
+          sourceQuery = item.author.replace(/\s+/g, "+");
+        }
+
+        let outletLogo = null;
+        if (sourceQuery && outletName !== "Unknown") {
+          outletLogo = await fetchFirstGoogleImage(sourceQuery);
+        }
         if (!outletLogo) {
           // fallback to favicon
           let outletLink =
@@ -165,7 +177,7 @@ export async function render(container, options) {
           ">
             ${item.title}
           </a>
-          <img src="${item.articleImage}" alt="" style="width: 100%; max-width: 220px; height: auto; object-fit: contain; border-radius: 4px; margin-top: 2px; align-self: center;">
+          <img src="${item.articleImage}" alt="" style="width: 100%; max-width: 200px; height: auto; object-fit: contain; border-radius: 4px; margin-top: 2px; align-self: center;">
         </div>
       `,
       )
