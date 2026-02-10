@@ -94,7 +94,7 @@ export function render(container, options) {
   let gravity = 0.25;
   let lift = -4;
   let pipes = [];
-  let pipeWidth = 100;
+  let pipeWidth = 120;
   let pipeGap = 120;
   let frame = 0;
   let score = 0;
@@ -187,22 +187,26 @@ export function render(container, options) {
   }
 
   function drawPipes() {
-    const pipeH = pipeImg.height;
+    const scale = pipeWidth / pipeImg.width;
+    const pipeH = pipeImg.height * scale;
 
     pipes.forEach((pipe) => {
       const gapTop = pipe.gapY;
       const gapBottom = gapTop + pipeGap;
 
       // ---------- TOP PIPE ----------
-      for (let i = 0, y = gapTop; y > -pipeH; i++, y -= pipeH) {
+      let y = gapTop;
+      let firstTop = true;
+      while (y > -pipeH) {
         ctx.save();
         ctx.translate(pipe.x, y);
 
-        if (i === 0) {
-          // first piece flipped 180°
+        if (firstTop) {
+          // First top piece flipped 180° (opens downward)
           ctx.translate(pipeWidth / 2, pipeH / 2);
           ctx.rotate(Math.PI);
           ctx.translate(-pipeWidth / 2, -pipeH / 2);
+          firstTop = false;
         }
 
         ctx.drawImage(
@@ -217,20 +221,20 @@ export function render(container, options) {
           pipeH,
         );
         ctx.restore();
+
+        y -= pipeH;
       }
 
       // ---------- BOTTOM PIPE ----------
-      for (let i = 0, y = gapBottom; y < canvas.height; i++, y += pipeH) {
+      y = gapBottom;
+      let firstBottom = true;
+      while (y < canvas.height) {
         ctx.save();
         ctx.translate(pipe.x, y);
 
-        if (i === 0) {
-          // first piece normal
-        } else if (y + pipeH > canvas.height) {
-          // optional: flip last piece at the bottom
-          ctx.translate(pipeWidth / 2, pipeH / 2);
-          ctx.rotate(Math.PI);
-          ctx.translate(-pipeWidth / 2, -pipeH / 2);
+        if (firstBottom) {
+          // First bottom piece normal (opens upward)
+          firstBottom = false;
         }
 
         ctx.drawImage(
@@ -245,6 +249,8 @@ export function render(container, options) {
           pipeH,
         );
         ctx.restore();
+
+        y += pipeH;
       }
     });
   }
