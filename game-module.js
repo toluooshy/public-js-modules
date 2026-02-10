@@ -83,7 +83,14 @@ export function render(container, options) {
     : "https://e0.pxfuel.com/wallpapers/488/135/desktop-wallpaper-flappy-bird-background.jpg";
 
   // Game state
-  let bird = { x: 50, y: canvas.height / 2, width: 24, height: 24, dy: 0 };
+  let bird = {
+    x: 50,
+    y: canvas.height / 2,
+    width: 24,
+    height: 24,
+    dy: 0,
+    rotation: 0, // radians
+  };
   let gravity = 0.35;
   let lift = -6;
   let pipes = [];
@@ -93,6 +100,10 @@ export function render(container, options) {
   let score = 0;
   let gameOver = false;
   let started = false;
+
+  const MAX_ROTATION = Math.PI / 2; // +90°
+  const FLAP_ROTATION = -Math.PI / 6; // -30°
+  const ROTATION_SPEED = 0.04; // how fast it falls forward
 
   function showOverlay(html) {
     overlay.innerHTML = html;
@@ -107,76 +118,107 @@ export function render(container, options) {
   function reset() {
     bird.y = canvas.height / 2;
     bird.dy = 0;
+    bird.rotation = 0;
     pipes = [];
     frame = 0;
     score = 0;
     gameOver = false;
     started = false;
+    gameOver = false;
     hideOverlay();
-    setTimeout(showPlayButton, 0);
+    showPlayButton();
   }
 
   function showPlayButton() {
     showOverlay(`
-      <button id="flappy-play-btn" style="
-        font-size:${Math.max(24, 36 * scale)}px;
-        padding:4px 8px;
-        border:none;
-        border-radius:0;
-        background:#ffeb3b;
-        color:#222;
-        font-family:${FONT_FAMILY};
-        font-weight:400;
-        cursor:pointer;
-      ">PLAY</button>
-    `);
-    overlay.querySelector("#flappy-play-btn").onclick = () => {
-      started = true;
-      hideOverlay();
-    };
+    <div style="
+      font-size:${Math.max(28, 36 * scale)}px;
+      padding:8px 16px;
+      background:#ffeb3b;
+      color:#222;
+      font-family:${FONT_FAMILY};
+      cursor:default;
+      user-select:none;
+    ">
+      CLICK TO PLAY
+    </div>
+  `);
   }
+
   showPlayButton();
 
   // Input
-  container.addEventListener("click", (e) => {
-    if (!started || gameOver) return;
-    if (e.target === canvas) bird.dy = lift;
+  container.addEventListener("click", () => {
+    if (!started) {
+      started = true;
+      hideOverlay();
+      return;
+    }
+
+    if (gameOver) {
+      reset();
+      started = true;
+      return;
+    }
+
+    bird.dy = lift;
+    bird.rotation = FLAP_ROTATION;
   });
 
   function drawBird() {
-    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    ctx.save();
+
+    ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+
+    ctx.rotate(bird.rotation);
+
+    ctx.drawImage(
+      birdImg,
+      -bird.width / 2,
+      -bird.height / 2,
+      bird.width,
+      bird.height,
+    );
+
+    ctx.restore();
   }
 
   function drawPipes() {
-    pipes.forEach((pipe) => {
-      // Draw top pipe (rotated 180 degrees), repeat image if needed
-      let topPipeY = 0;
-      let topPipeHeight = pipe.top;
-      for (let y = topPipeY; y < topPipeHeight; y += pipeImg.height) {
-        ctx.save();
-        ctx.translate(pipe.x + pipeWidth / 2, y + pipeImg.height / 2);
-        ctx.rotate(Math.PI);
-        ctx.drawImage(
-          pipeImg,
-          -pipeWidth / 2,
-          -pipeImg.height / 2,
-          pipeWidth,
-          pipeImg.height,
-        );
-        ctx.restore();
-      }
+    const scale = pipeWidth / pipeImg.width;
+    const scaledHeight = pipeImg.height * scale;
 
-      // Draw bottom pipe (normal), repeat image if needed
-      let bottomPipeY = canvas.height - pipe.bottom;
-      for (let y = bottomPipeY; y < canvas.height; y += pipeImg.height) {
-        ctx.drawImage(
-          pipeImg,
-          pipe.x,
-          y,
-          pipeWidth,
-          Math.min(pipeImg.height, canvas.height - y),
-        );
-      }
+    pipes.forEach((pipe) => {
+      // ---- TOP PIPE (flipped) ----
+      ctx.save();
+      ctx.translate(pipe.x, pipe.top);
+      ctx.scale(1, -1);
+
+      ctx.drawImage(
+        pipeImg,
+        0,
+        0,
+        pipeImg.width,
+        pipeImg.height,
+        0,
+        0,
+        pipeWidth,
+        pipe.top,
+      );
+
+      ctx.restore();
+
+      // ---- BOTTOM PIPE ----
+      ctx.drawImage(
+        pipeImg,
+        0,
+        0,
+        pipeImg.width,
+        pipeImg.height,
+        pipe.x,
+        canvas.height - pipe.bottom,
+        pipeWidth,
+        pipe.bottom,
+      );
     });
   }
 
@@ -192,36 +234,32 @@ export function render(container, options) {
 
   function drawGameOver() {
     showOverlay(`
+    <div style="
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      font-family:${FONT_FAMILY};
+      pointer-events:none;
+    ">
       <div style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        width:100%;
-        height:100%;
-        font-family:${FONT_FAMILY};
-      ">
-        <div style="
-          font-size:${Math.max(36, 48 * scale)}px;
-          color:#fff;
-          margin-bottom:24px;
-          text-align:center;
-        ">GAME OVER</div>
-        <button id="flappy-replay-btn" style="
-          font-size:${Math.max(24, 36 * scale)}px;
-          padding:4px 8px;
-          border:none;
-          border-radius:0;
-          background:#ffeb3b;
-          color:#222;
-          font-family:${FONT_FAMILY};
-          font-weight:400;
-          cursor:pointer;
-        ">REPLAY</button>
-      </div>
-    `);
+        font-size:${Math.max(36, 48 * scale)}px;
+        color:#fff;
+        margin-bottom:16px;
+      ">GAME OVER</div>
 
-    overlay.querySelector("#flappy-replay-btn").onclick = reset;
+      <div style="
+        font-size:${Math.max(22, 30 * scale)}px;
+        padding:6px 14px;
+        background:#ffeb3b;
+        color:#222;
+      ">
+        CLICK TO REPLAY
+      </div>
+    </div>
+  `);
   }
 
   function update() {
@@ -229,6 +267,14 @@ export function render(container, options) {
 
     bird.dy += gravity;
     bird.y += bird.dy;
+
+    // Rotate bird downward naturally
+    bird.rotation += ROTATION_SPEED;
+
+    // Clamp rotation to max 90° down
+    if (bird.rotation > MAX_ROTATION) {
+      bird.rotation = MAX_ROTATION;
+    }
 
     if (frame % 100 === 0) {
       const top = Math.random() * (canvas.height - pipeGap - 40) + 20;
