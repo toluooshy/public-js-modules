@@ -94,7 +94,7 @@ export function render(container, options) {
   let gravity = 0.25;
   let lift = -4;
   let pipes = [];
-  let pipeWidth = 60;
+  let pipeWidth = 80;
   let pipeGap = 120;
   let frame = 0;
   let score = 0;
