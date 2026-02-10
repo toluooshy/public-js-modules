@@ -71,7 +71,7 @@ export function render(container, options) {
   // Assets
   const birdImg = new Image();
   birdImg.src =
-    "https://www.nicepng.com/png/detail/151-1515288_flappy-bird-png-jpg-download-flappy-bird-bird.png";
+    "https://www.clipartmax.com/png/full/64-645329_flappy-bird-clipart-flappy-bird-transparent-background.png";
 
   const pipeImg = new Image();
   pipeImg.src =
@@ -113,8 +113,7 @@ export function render(container, options) {
     gameOver = false;
     started = false;
     hideOverlay();
-    // Show play button again
-    showPlayButton();
+    setTimeout(showPlayButton, 0);
   }
 
   function showPlayButton() {
@@ -150,27 +149,34 @@ export function render(container, options) {
 
   function drawPipes() {
     pipes.forEach((pipe) => {
-      // Draw top pipe (rotated 180 degrees)
-      ctx.save();
-      ctx.translate(pipe.x + pipeWidth / 2, pipe.top - pipeImg.height / 2);
-      ctx.rotate(Math.PI);
-      ctx.drawImage(
-        pipeImg,
-        -pipeWidth / 2,
-        -pipeImg.height / 2,
-        pipeWidth,
-        pipeImg.height,
-      );
-      ctx.restore();
+      // Draw top pipe (rotated 180 degrees), repeat image if needed
+      let topPipeY = 0;
+      let topPipeHeight = pipe.top;
+      for (let y = topPipeY; y < topPipeHeight; y += pipeImg.height) {
+        ctx.save();
+        ctx.translate(pipe.x + pipeWidth / 2, y + pipeImg.height / 2);
+        ctx.rotate(Math.PI);
+        ctx.drawImage(
+          pipeImg,
+          -pipeWidth / 2,
+          -pipeImg.height / 2,
+          pipeWidth,
+          pipeImg.height,
+        );
+        ctx.restore();
+      }
 
-      // Draw bottom pipe (normal)
-      ctx.drawImage(
-        pipeImg,
-        pipe.x,
-        canvas.height - pipe.bottom,
-        pipeWidth,
-        pipeImg.height,
-      );
+      // Draw bottom pipe (normal), repeat image if needed
+      let bottomPipeY = canvas.height - pipe.bottom;
+      for (let y = bottomPipeY; y < canvas.height; y += pipeImg.height) {
+        ctx.drawImage(
+          pipeImg,
+          pipe.x,
+          y,
+          pipeWidth,
+          Math.min(pipeImg.height, canvas.height - y),
+        );
+      }
     });
   }
 
