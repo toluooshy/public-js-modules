@@ -86,16 +86,16 @@ export function render(container, options) {
   let bird = {
     x: 50,
     y: canvas.height / 2,
-    width: 48,
-    height: 36,
+    width: 36,
+    height: 24,
     dy: 0,
     rotation: 0, // radians
   };
   let gravity = 0.25;
   let lift = -4;
   let pipes = [];
-  let pipeWidth = 40;
-  let pipeGap = 120;
+  let pipeWidth = 60;
+  let pipeGap = 100;
   let frame = 0;
   let score = 0;
   let gameOver = false;
@@ -105,12 +105,6 @@ export function render(container, options) {
   const MAX_ROTATION = Math.PI / 2; // +90°
   const FLAP_ROTATION = -Math.PI / 6; // -30°
   const ROTATION_SPEED = 0.04; // how fast it falls forward
-
-  function showOverlay(html) {
-    overlay.innerHTML = html;
-    overlay.style.display = "flex";
-  }
-  showOverlay();
 
   function hideOverlay() {
     overlayMode = "none";
@@ -149,6 +143,8 @@ export function render(container, options) {
     </div>
   `;
   }
+
+  showPlayButton();
 
   // Input
   container.addEventListener("click", () => {
