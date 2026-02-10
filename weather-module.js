@@ -115,7 +115,7 @@ export async function render(container, options) {
       ">
         <div style="font-size: ${Math.max(25.6, 32 * scale * 0.8) + 8}px; margin-bottom: ${Math.max(4.8, 6 * scale * 0.8)}px;">${weather.icon}</div>
         <div style="font-size: ${Math.max(14.4, 18 * scale * 0.8) + 8}px; font-weight: 400;">${temp}${tempUnit}</div>
-        <div style="font-size: ${Math.max(4, 5 * scale * 0.8) + 8}px; opacity: 0.7; margin-top: ${Math.max(2.4, 3 * scale * 0.8)}px;">${weather.desc}</div>
+        <div style="font-size: ${Math.max(4, 5 * scale * 0.8) + 8}px; opacity: 0.5; margin-top: ${Math.max(2.4, 3 * scale * 0.8)}px;">${weather.desc}</div>
       </div>
     `;
   } catch (err) {

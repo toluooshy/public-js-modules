@@ -58,69 +58,116 @@ export async function render(container, options) {
       `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`,
     );
 
-    // Build HTML for headlines with images
-    const newsHtml = rssData.items
-      .map((item) => {
-        // Try to extract image from thumbnail, enclosure, or media:content
-        let imageUrl =
-          item.thumbnail || (item.enclosure && item.enclosure.link) || null;
-        // Try to extract from media:content if available (rss2json puts it in media object)
-        if (
-          !imageUrl &&
-          item.media &&
-          item.media.content &&
-          item.media.content.url
-        ) {
-          imageUrl = item.media.content.url;
+    // Helper to fetch first Google Images result for a query
+    async function fetchFirstGoogleImage(query) {
+      try {
+        // Use a public CORS proxy for demo purposes (not for production)
+        const proxy = "https://corsproxy.io/?";
+        const url =
+          proxy +
+          encodeURIComponent(
+            `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`,
+          );
+        const res = await fetch(url);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const imgs = doc.querySelectorAll("img");
+        // Google puts its logo as the first image, so use the second or third
+        if (imgs.length > 2) {
+          return imgs[1].src || imgs[2].src;
         }
-        // Fallback placeholder if no image
-        if (!imageUrl) {
-          imageUrl = "https://via.placeholder.com/100x60?text=No+Image";
+      } catch (e) {}
+      return null;
+    }
+
+    // For each news item, fetch images in parallel
+    const newsWithImages = await Promise.all(
+      rssData.items.map(async (item) => {
+        // Headline image
+        let articleImage = await fetchFirstGoogleImage(item.title);
+        if (!articleImage) {
+          articleImage =
+            item.thumbnail || (item.enclosure && item.enclosure.link) || null;
         }
-        return `
-          <div style="
-            margin-bottom: ${Math.max(3, 4 * scale)}px;
-            padding-bottom: ${Math.max(3, 4 * scale)}px;
-            border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(128,128,128,0.3)"};
-            display: flex;
-            align-items: flex-start;
-            gap: ${Math.max(6, 8 * scale)}px;
-          ">
-            <img src="${imageUrl}" alt="" style="width: 80px; height: 60px; object-fit: contain; border-radius: 4px; flex-shrink: 0;">
-            <div style="flex: 1; min-width: 0;">
-              <a href="${item.link}" target="_blank" style="
-                font-size: ${Math.max(6, 7 * scale)}px;
-                font-weight: 400;
-                margin-bottom: ${Math.max(2, 2.5 * scale)}px;
-                color: ${isDark ? "#ffffff" : "#1a1a1a"};
-                text-decoration: none;
-                display: block;
-                line-height: 1.2;
-                white-space: normal;
-                overflow-wrap: break-word;
-                max-width: 240px;
-              ">
-                ${item.title}
-              </a>
-              <div style="font-size: ${Math.max(5, 5.5 * scale)}px; opacity: 0.7;">
-                ${(() => {
-                  const d = new Date(item.pubDate);
-                  const dateStr = d.toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  });
-                  const timeStr = d.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  });
-                  return `${dateStr} ${timeStr}`;
-                })()}
-              </div>
-            </div>
+        if (!articleImage) {
+          articleImage = "https://via.placeholder.com/240x120?text=No+Image";
+        }
+
+        // Outlet logo
+        let outletName =
+          item.source && item.source.title
+            ? item.source.title
+            : item.author || "Unknown";
+        let outletLogo = await fetchFirstGoogleImage(
+          outletName + " current logo wikipedia",
+        );
+        if (!outletLogo) {
+          // fallback to favicon
+          let outletLink =
+            item.source && item.source.url ? item.source.url : null;
+          if (outletLink) {
+            try {
+              const urlObj = new URL(outletLink);
+              outletLogo = urlObj.origin + "/favicon.ico";
+            } catch {}
+          }
+        }
+
+        return { ...item, articleImage, outletLogo, outletName };
+      }),
+    );
+
+    // Build HTML for headlines with fetched images
+    const newsHtml = newsWithImages
+      .map(
+        (item) => `
+        <div style="
+          margin-bottom: ${Math.max(6, 10 * scale)}px;
+          padding-bottom: ${Math.max(6, 10 * scale)}px;
+          border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(128,128,128,0.3)"};
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: ${Math.max(6, 8 * scale)}px;
+        ">
+          <div style="display: flex; align-items: center; gap: ${Math.max(6, 8 * scale)}px; margin-bottom: ${Math.max(2, 3 * scale)}px;">
+            ${
+              item.outletLogo
+                ? `<img src="${item.outletLogo}" alt="${item.outletName}" style="width: 20px; height: 20px; object-fit: contain; border-radius: 3px; background: #fff; border: 1px solid #ccc;">`
+                : `<span style="font-size: ${Math.max(7, 10 * scale)}px; font-weight: 500; opacity: 0.7;">${item.outletName}</span>`
+            }
+            <span style="font-size: ${Math.max(6, 8 * scale)}px; opacity: 0.7;">${(() => {
+              const d = new Date(item.pubDate);
+              const dateStr = d.toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              });
+              const timeStr = d.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              return `${dateStr} ${timeStr}`;
+            })()}</span>
           </div>
-        `;
-      })
+          <a href="${item.link}" target="_blank" style="
+            font-size: ${Math.max(12, 16 * scale)}px;
+            font-weight: 500;
+            margin-bottom: ${Math.max(2, 3 * scale)}px;
+            color: ${isDark ? "#ffffff" : "#1a1a1a"};
+            text-decoration: none;
+            display: block;
+            line-height: 1.3;
+            white-space: normal;
+            overflow-wrap: break-word;
+            max-width: 100%;
+          ">
+            ${item.title}
+          </a>
+          <img src="${item.articleImage}" alt="" style="width: 100%; max-width: 240px; height: auto; object-fit: contain; border-radius: 4px; margin-top: 2px; align-self: center;">
+        </div>
+      `,
+      )
       .join("");
 
     container.innerHTML = `

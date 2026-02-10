@@ -46,17 +46,22 @@ export function render(container, options) {
 
   function updateClock() {
     const now = new Date();
-    // Format: Feb 9, 2026 7:30:12 PM
+    // Date: Feb 9, 2026
     const dateStr = now.toLocaleString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
+    });
+    // Time: 7:30 PM (no seconds)
+    const timeStr = now.toLocaleString("en-US", {
       hour: "numeric",
       minute: "2-digit",
-      second: "2-digit",
       hour12: true,
     });
-    clockEl.textContent = dateStr;
+    clockEl.innerHTML = `
+      <div style="opacity:0.5; font-size:${Math.max(8, 20 * scale - 8)}px;">${dateStr}</div>
+      <div style="font-size:${Math.max(16, 20 * scale)}px;">${timeStr}</div>
+    `;
   }
 
   updateClock();
