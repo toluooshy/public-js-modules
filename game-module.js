@@ -147,13 +147,20 @@ export function render(container, options) {
 
   function drawPipes() {
     pipes.forEach((pipe) => {
+      // Draw top pipe (rotated 180 degrees)
+      ctx.save();
+      ctx.translate(pipe.x + pipeWidth / 2, pipe.top - pipeImg.height / 2);
+      ctx.rotate(Math.PI);
       ctx.drawImage(
         pipeImg,
-        pipe.x,
-        pipe.top - pipeImg.height,
+        -pipeWidth / 2,
+        -pipeImg.height / 2,
         pipeWidth,
         pipeImg.height,
       );
+      ctx.restore();
+
+      // Draw bottom pipe (normal)
       ctx.drawImage(
         pipeImg,
         pipe.x,
@@ -248,7 +255,22 @@ export function render(container, options) {
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height * 1.5);
+    // Center the background image
+    const imgAspect = bgImg.width / bgImg.height;
+    const canvasAspect = canvas.width / canvas.height;
+    let drawWidth, drawHeight;
+    if (imgAspect > canvasAspect) {
+      // Image is wider than canvas
+      drawHeight = canvas.height;
+      drawWidth = bgImg.width * (canvas.height / bgImg.height);
+    } else {
+      // Image is taller than canvas
+      drawWidth = canvas.width;
+      drawHeight = bgImg.height * (canvas.width / bgImg.width);
+    }
+    const dx = (canvas.width - drawWidth) / 2;
+    const dy = (canvas.height - drawHeight) / 2;
+    ctx.drawImage(bgImg, dx, dy, drawWidth, drawHeight);
 
     if (started) {
       drawPipes();

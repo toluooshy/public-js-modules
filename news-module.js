@@ -57,6 +57,7 @@ export async function render(container, options) {
     const rssData = await fetchJSON(
       `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`,
     );
+    console.log("Initial API news feed response:", rssData);
 
     // Helper to fetch first Google Images result for a query
     async function fetchFirstGoogleImage(query) {
@@ -164,7 +165,7 @@ export async function render(container, options) {
           ">
             ${item.title}
           </a>
-          <img src="${item.articleImage}" alt="" style="width: 100%; max-width: 240px; height: auto; object-fit: contain; border-radius: 4px; margin-top: 2px; align-self: center;">
+          <img src="${item.articleImage}" alt="" style="width: 100%; max-width: 220px; height: auto; object-fit: contain; border-radius: 4px; margin-top: 2px; align-self: center;">
         </div>
       `,
       )
