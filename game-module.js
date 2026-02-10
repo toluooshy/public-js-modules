@@ -86,15 +86,15 @@ export function render(container, options) {
   let bird = {
     x: 50,
     y: canvas.height / 2,
-    width: 24,
-    height: 24,
+    width: 48,
+    height: 36,
     dy: 0,
     rotation: 0, // radians
   };
   let gravity = 0.25;
   let lift = -4;
   let pipes = [];
-  let pipeWidth = 40;
+  let pipeWidth = 80;
   let pipeGap = 120;
   let frame = 0;
   let score = 0;
@@ -110,6 +110,7 @@ export function render(container, options) {
     overlay.innerHTML = html;
     overlay.style.display = "flex";
   }
+  showOverlay();
 
   function hideOverlay() {
     overlayMode = "none";
@@ -197,37 +198,41 @@ export function render(container, options) {
       const gapTop = pipe.gapY;
       const gapBottom = gapTop + pipeGap;
 
-      // ---- TOP PIPE (flipped, extends upward) ----
-      ctx.save();
-      ctx.translate(pipe.x, gapTop);
-      ctx.scale(1, -1);
+      // ---------- TOP PIPE (stack upward) ----------
+      for (let y = gapTop; y > -pipeH; y -= pipeH) {
+        ctx.save();
+        ctx.translate(pipe.x, y);
+        ctx.scale(1, -1);
 
-      ctx.drawImage(
-        pipeImg,
-        0,
-        0,
-        pipeImg.width,
-        pipeImg.height,
-        0,
-        0,
-        pipeWidth,
-        pipeH,
-      );
+        ctx.drawImage(
+          pipeImg,
+          0,
+          0,
+          pipeImg.width,
+          pipeImg.height,
+          0,
+          0,
+          pipeWidth,
+          pipeH,
+        );
 
-      ctx.restore();
+        ctx.restore();
+      }
 
-      // ---- BOTTOM PIPE (extends downward) ----
-      ctx.drawImage(
-        pipeImg,
-        0,
-        0,
-        pipeImg.width,
-        pipeImg.height,
-        pipe.x,
-        gapBottom,
-        pipeWidth,
-        pipeH,
-      );
+      // ---------- BOTTOM PIPE (stack downward) ----------
+      for (let y = gapBottom; y < canvas.height + pipeH; y += pipeH) {
+        ctx.drawImage(
+          pipeImg,
+          0,
+          0,
+          pipeImg.width,
+          pipeImg.height,
+          pipe.x,
+          y,
+          pipeWidth,
+          pipeH,
+        );
+      }
     });
   }
 
