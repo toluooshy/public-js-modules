@@ -94,7 +94,7 @@ export function render(container, options) {
   let gravity = 0.25;
   let lift = -4;
   let pipes = [];
-  let pipeWidth = 120;
+  let pipeWidth = 80;
   let pipeGap = 120;
   let frame = 0;
   let score = 0;
@@ -195,62 +195,67 @@ export function render(container, options) {
       const gapBottom = gapTop + pipeGap;
 
       // ---------- TOP PIPE ----------
-      let y = gapTop;
-      let firstTop = true;
-      while (y > -pipeH) {
-        ctx.save();
-        ctx.translate(pipe.x, y);
+      // First piece flipped 180° to open downward
+      ctx.save();
+      ctx.translate(pipe.x, gapTop - pipeH); // top edge of first piece aligns with gap
+      ctx.translate(pipeWidth / 2, pipeH / 2);
+      ctx.rotate(Math.PI);
+      ctx.translate(-pipeWidth / 2, -pipeH / 2);
+      ctx.drawImage(
+        pipeImg,
+        0,
+        0,
+        pipeImg.width,
+        pipeImg.height,
+        0,
+        0,
+        pipeWidth,
+        pipeH,
+      );
+      ctx.restore();
 
-        if (firstTop) {
-          // First top piece flipped 180° (opens downward)
-          ctx.translate(pipeWidth / 2, pipeH / 2);
-          ctx.rotate(Math.PI);
-          ctx.translate(-pipeWidth / 2, -pipeH / 2);
-          firstTop = false;
-        }
-
+      // Remaining top pieces stack upward
+      for (let y = gapTop - pipeH - pipeH; y > -pipeH; y -= pipeH) {
         ctx.drawImage(
           pipeImg,
           0,
           0,
           pipeImg.width,
           pipeImg.height,
-          0,
-          0,
+          pipe.x,
+          y,
           pipeWidth,
           pipeH,
         );
-        ctx.restore();
-
-        y -= pipeH;
       }
 
       // ---------- BOTTOM PIPE ----------
-      y = gapBottom;
-      let firstBottom = true;
-      while (y < canvas.height) {
-        ctx.save();
-        ctx.translate(pipe.x, y);
+      // First piece normal (opens upward)
+      ctx.drawImage(
+        pipeImg,
+        0,
+        0,
+        pipeImg.width,
+        pipeImg.height,
+        pipe.x,
+        gapBottom,
+        pipeWidth,
+        pipeH,
+      );
 
-        if (firstBottom) {
-          // First bottom piece normal (opens upward)
-          firstBottom = false;
-        }
-
+      // Remaining bottom pieces stack downward
+      for (let y = gapBottom + pipeH; y < canvas.height; y += pipeH) {
         ctx.drawImage(
           pipeImg,
           0,
           0,
           pipeImg.width,
           pipeImg.height,
-          0,
-          0,
+          pipe.x,
+          y,
           pipeWidth,
           pipeH,
         );
-        ctx.restore();
-
-        y += pipeH;
       }
     });
   }
