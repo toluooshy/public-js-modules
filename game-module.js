@@ -91,8 +91,8 @@ export function render(container, options) {
     dy: 0,
     rotation: 0, // radians
   };
-  let gravity = 0.35;
-  let lift = -6;
+  let gravity = 0.25;
+  let lift = -4;
   let pipes = [];
   let pipeWidth = 40;
   let pipeGap = 120;
@@ -100,6 +100,7 @@ export function render(container, options) {
   let score = 0;
   let gameOver = false;
   let started = false;
+  let overlayMode = "idle"; // "idle" | "gameover" | "none"
 
   const MAX_ROTATION = Math.PI / 2; // +90°
   const FLAP_ROTATION = -Math.PI / 6; // -30°
@@ -111,6 +112,7 @@ export function render(container, options) {
   }
 
   function hideOverlay() {
+    overlayMode = "none";
     overlay.innerHTML = "";
     overlay.style.display = "none";
   }
@@ -119,48 +121,52 @@ export function render(container, options) {
     bird.y = canvas.height / 2;
     bird.dy = 0;
     bird.rotation = 0;
+
     pipes = [];
     frame = 0;
     score = 0;
-    gameOver = false;
+
     started = false;
     gameOver = false;
-    hideOverlay();
-    showPlayButton();
+
+    showPlayButton(); // only time CLICK TO PLAY is allowed back
   }
 
   function showPlayButton() {
-    showOverlay(`
+    overlayMode = "idle";
+    overlay.style.display = "flex";
+    overlay.innerHTML = `
     <div style="
       font-size:${Math.max(28, 36 * scale)}px;
       padding:8px 16px;
       background:#ffeb3b;
       color:#222;
       font-family:${FONT_FAMILY};
-      cursor:default;
       user-select:none;
     ">
       CLICK TO PLAY
     </div>
-  `);
+  `;
   }
-
-  showPlayButton();
 
   // Input
   container.addEventListener("click", () => {
-    if (!started) {
+    // IDLE → START
+    if (!started && overlayMode === "idle") {
+      started = true;
+      hideOverlay(); // <-- permanently hide CLICK TO PLAY
+      return;
+    }
+
+    // GAME OVER → RESTART
+    if (gameOver) {
+      reset();
       started = true;
       hideOverlay();
       return;
     }
 
-    if (gameOver) {
-      reset();
-      started = true;
-      return;
-    }
-
+    // FLAP
     bird.dy = lift;
     bird.rotation = FLAP_ROTATION;
   });
@@ -185,12 +191,15 @@ export function render(container, options) {
 
   function drawPipes() {
     const scale = pipeWidth / pipeImg.width;
-    const scaledHeight = pipeImg.height * scale;
+    const pipeH = pipeImg.height * scale;
 
     pipes.forEach((pipe) => {
-      // ---- TOP PIPE (flipped) ----
+      const gapTop = pipe.gapY;
+      const gapBottom = gapTop + pipeGap;
+
+      // ---- TOP PIPE (flipped, extends upward) ----
       ctx.save();
-      ctx.translate(pipe.x, pipe.top);
+      ctx.translate(pipe.x, gapTop);
       ctx.scale(1, -1);
 
       ctx.drawImage(
@@ -202,12 +211,12 @@ export function render(container, options) {
         0,
         0,
         pipeWidth,
-        pipe.top,
+        pipeH,
       );
 
       ctx.restore();
 
-      // ---- BOTTOM PIPE ----
+      // ---- BOTTOM PIPE (extends downward) ----
       ctx.drawImage(
         pipeImg,
         0,
@@ -215,9 +224,9 @@ export function render(container, options) {
         pipeImg.width,
         pipeImg.height,
         pipe.x,
-        canvas.height - pipe.bottom,
+        gapBottom,
         pipeWidth,
-        pipe.bottom,
+        pipeH,
       );
     });
   }
@@ -233,7 +242,11 @@ export function render(container, options) {
   }
 
   function drawGameOver() {
-    showOverlay(`
+    if (overlayMode === "gameover") return;
+
+    overlayMode = "gameover";
+    overlay.style.display = "flex";
+    overlay.innerHTML = `
     <div style="
       display:flex;
       flex-direction:column;
@@ -259,7 +272,7 @@ export function render(container, options) {
         CLICK TO REPLAY
       </div>
     </div>
-  `);
+  `;
   }
 
   function update() {
@@ -280,8 +293,7 @@ export function render(container, options) {
       const top = Math.random() * (canvas.height - pipeGap - 40) + 20;
       pipes.push({
         x: canvas.width,
-        top,
-        bottom: canvas.height - top - pipeGap,
+        gapY: top, // top of the gap
       });
     }
 
@@ -296,7 +308,7 @@ export function render(container, options) {
       if (
         bird.x + bird.width > p.x &&
         bird.x < p.x + pipeWidth &&
-        (bird.y < p.top || bird.y + bird.height > canvas.height - p.bottom)
+        (bird.y < p.gapY || bird.y + bird.height > p.gapY + pipeGap)
       ) {
         gameOver = true;
       }
