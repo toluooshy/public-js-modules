@@ -187,21 +187,22 @@ export function render(container, options) {
   }
 
   function drawPipes() {
-    const scale = pipeWidth / pipeImg.width;
-    const pipeH = pipeImg.height * scale;
+    const pipeH = pipeImg.height;
 
     pipes.forEach((pipe) => {
       const gapTop = pipe.gapY;
       const gapBottom = gapTop + pipeGap;
 
-      // ---------- TOP PIPE (stack upward) ----------
-      for (let y = gapTop; y > -pipeH; y -= pipeH) {
+      // ---------- TOP PIPE ----------
+      for (let i = 0, y = gapTop; y > -pipeH; i++, y -= pipeH) {
         ctx.save();
         ctx.translate(pipe.x, y);
-        ctx.scale(1, -1);
 
-        if (y % 2 === 0) {
-          ctx.scale(1, -1);
+        if (i === 0) {
+          // first piece flipped 180°
+          ctx.translate(pipeWidth / 2, pipeH / 2);
+          ctx.rotate(Math.PI);
+          ctx.translate(-pipeWidth / 2, -pipeH / 2);
         }
 
         ctx.drawImage(
@@ -215,14 +216,21 @@ export function render(container, options) {
           pipeWidth,
           pipeH,
         );
-
         ctx.restore();
       }
 
-      // ---------- BOTTOM PIPE (stack downward) ----------
-      for (let y = gapBottom; y < canvas.height + pipeH; y += pipeH) {
-        if (y % 2 === 0) {
-          ctx.scale(1, -1);
+      // ---------- BOTTOM PIPE ----------
+      for (let i = 0, y = gapBottom; y < canvas.height; i++, y += pipeH) {
+        ctx.save();
+        ctx.translate(pipe.x, y);
+
+        if (i === 0) {
+          // first piece normal
+        } else if (y + pipeH > canvas.height) {
+          // optional: flip last piece at the bottom
+          ctx.translate(pipeWidth / 2, pipeH / 2);
+          ctx.rotate(Math.PI);
+          ctx.translate(-pipeWidth / 2, -pipeH / 2);
         }
 
         ctx.drawImage(
@@ -231,11 +239,12 @@ export function render(container, options) {
           0,
           pipeImg.width,
           pipeImg.height,
-          pipe.x,
-          y,
+          0,
+          0,
           pipeWidth,
           pipeH,
         );
+        ctx.restore();
       }
     });
   }
