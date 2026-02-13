@@ -1,0 +1,5 @@
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/example-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/clock-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/weather-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/news-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/game-module.js
