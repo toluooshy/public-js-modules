@@ -16,27 +16,28 @@ export async function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 14px; font-weight: bold;">🐕 Random Dog</div>
+        <div style="font-size: 10px; font-weight: bold;">🐕 Random Dog</div>
         <button id="new-dog-btn" style="
-          padding: 6px 12px;
+          padding: 2px 4px;
           background: ${isDark ? "#4a9eff" : "#2563eb"};
           color: white;
           border: none;
-          border-radius: 4px;
+          border-radius: 3px;
           cursor: pointer;
-          font-size: 12px;
+          font-size: 8px;
+          font-weight: 400;
         ">
           New Dog
         </button>
@@ -47,7 +48,7 @@ export async function render(container, options) {
         align-items: center;
         justify-content: center;
         background: ${isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.5)"};
-        border-radius: 8px;
+        border-radius: 6px;
         overflow: hidden;
       ">
         <img id="dog-img" style="
@@ -58,8 +59,9 @@ export async function render(container, options) {
       </div>
       <div id="dog-breed" style="
         text-align: center;
-        margin-top: 8px;
-        font-size: 12px;
+        margin-top: 4px;
+        font-size: 8px;
+        font-weight: 400;
         opacity: 0.7;
       "></div>
     </div>

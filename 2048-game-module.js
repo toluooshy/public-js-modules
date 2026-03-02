@@ -20,29 +20,30 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 18px; font-weight: bold;">2048</div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <div style="font-size: 14px;">Score: <span id="score">0</span></div>
+        <div style="font-size: 11px; font-weight: bold;">2048</div>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <div style="font-size: 9px; font-weight: 400;">Score: <span id="score">0</span></div>
           <button id="restart-btn" style="
-            padding: 4px 8px;
+            padding: 2px 4px;
             background: ${isDark ? "#4a9eff" : "#2563eb"};
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 7px;
+            font-weight: 400;
           ">
             New Game
           </button>
@@ -52,10 +53,10 @@ export function render(container, options) {
         flex: 1;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
+        gap: 4px;
         background: ${isDark ? "rgba(0,0,0,0.2)" : "rgba(187,173,160,0.4)"};
-        padding: 8px;
-        border-radius: 8px;
+        padding: 4px;
+        border-radius: 4px;
       "></div>
       <div id="game-over" style="
         display: none;
@@ -65,12 +66,12 @@ export function render(container, options) {
         transform: translate(-50%, -50%);
         background: rgba(0,0,0,0.9);
         color: white;
-        padding: 20px;
-        border-radius: 8px;
+        padding: 10px;
+        border-radius: 6px;
         text-align: center;
       ">
-        <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Game Over!</div>
-        <div style="font-size: 14px;">Final Score: <span id="final-score">0</span></div>
+        <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">Game Over!</div>
+        <div style="font-size: 9px; font-weight: 400;">Final Score: <span id="final-score">0</span></div>
       </div>
     </div>
   `;
@@ -138,7 +139,7 @@ export function render(container, options) {
           background: ${value ? colors.bg : isDark ? "rgba(255,255,255,0.1)" : "rgba(238,228,218,0.35)"};
           color: ${colors.color};
           font-size: ${value > 512 ? "18px" : "24px"};
-          font-weight: bold;
+          font-weight: 400;
           border-radius: 4px;
           transition: all 0.15s;
         `;

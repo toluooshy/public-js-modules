@@ -24,29 +24,29 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
       position: relative;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         z-index: 10;
       ">
-        <div style="font-size: 14px; font-weight: bold;">🏂 Snowboard</div>
-        <div style="font-size: 14px;">Score: <span id="score">0</span></div>
+        <div style="font-size: 10px; font-weight: bold;">🏂 Snowboard</div>
+        <div style="font-size: 10px; font-weight: 400;">Score: <span id="score">0</span></div>
       </div>
       
       <div id="game-container" style="
         flex: 1;
         position: relative;
         background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%);
-        border-radius: 8px;
+        border-radius: 6px;
         overflow: hidden;
       ">
         <!-- Ski slope lanes -->
@@ -68,7 +68,7 @@ export function render(container, options) {
           bottom: 80px;
           left: 50%;
           transform: translateX(-50%);
-          font-size: 32px;
+          font-size: 20px;
           z-index: 5;
           transition: left 0.2s ease, bottom 0.3s ease;
         ">🏂</div>
@@ -85,21 +85,22 @@ export function render(container, options) {
           transform: translate(-50%, -50%);
           background: rgba(0,0,0,0.9);
           color: white;
-          padding: 20px;
-          border-radius: 8px;
+          padding: 10px;
+          border-radius: 6px;
           text-align: center;
           z-index: 20;
         ">
-          <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Game Over!</div>
-          <div style="font-size: 14px; margin-bottom: 12px;">Score: <span id="final-score">0</span></div>
+          <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">Game Over!</div>
+          <div style="font-size: 9px; font-weight: 400; margin-bottom: 6px;">Score: <span id="final-score">0</span></div>
           <button id="restart-btn" style="
-            padding: 8px 16px;
+            padding: 4px 8px;
             background: #4a9eff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 9px;
+            font-weight: 400;
           ">Play Again</button>
         </div>
         
@@ -111,25 +112,26 @@ export function render(container, options) {
           transform: translate(-50%, -50%);
           background: rgba(0,0,0,0.8);
           color: white;
-          padding: 20px;
-          border-radius: 8px;
+          padding: 10px;
+          border-radius: 6px;
           text-align: center;
           z-index: 20;
         ">
-          <div style="font-size: 18px; font-weight: bold; margin-bottom: 12px;">Snowboard Surfer</div>
-          <div style="font-size: 12px; margin-bottom: 12px; opacity: 0.8;">
+          <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Snowboard Surfer</div>
+          <div style="font-size: 8px; font-weight: 400; margin-bottom: 6px; opacity: 0.8;">
             ← → to switch lanes<br>
             ↑ to jump<br>
             Avoid obstacles!
           </div>
           <button id="start-btn" style="
-            padding: 8px 16px;
+            padding: 4px 8px;
             background: #4a9eff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 9px;
+            font-weight: 400;
           ">Start Game</button>
         </div>
       </div>
@@ -165,7 +167,7 @@ export function render(container, options) {
       top: -50px;
       left: ${lanes[lane]}%;
       transform: translateX(-50%);
-      font-size: 28px;
+      font-size: 18px;
       z-index: 4;
     `;
     obstacle.textContent = type;

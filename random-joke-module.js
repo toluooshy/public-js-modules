@@ -17,31 +17,33 @@ export async function render(container, options) {
       flex-direction: column;
       justify-content: center;
       height: 100%;
-      padding: 16px;
+      padding: 8px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
-      <div style="font-size: 14px; font-weight: bold; margin-bottom: 12px;">
+      <div style="font-size: 10px; font-weight: bold; margin-bottom: 4px;">
         😂 Random Joke
       </div>
       <div id="joke-content" style="
-        font-size: 13px;
-        line-height: 1.5;
-        margin-bottom: 12px;
+        font-size: 9px;
+        font-weight: 400;
+        line-height: 1.3;
+        margin-bottom: 6px;
         flex: 1;
       ">
         Loading...
       </div>
       <button id="new-joke-btn" style="
-        padding: 6px 12px;
+        padding: 3px 6px;
         background: ${isDark ? "#4a9eff" : "#2563eb"};
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 8px;
+        font-weight: 400;
         align-self: flex-start;
       ">
         New Joke

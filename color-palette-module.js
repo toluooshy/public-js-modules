@@ -31,34 +31,35 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 14px; font-weight: bold;">🎨 Color Palette</div>
+        <div style="font-size: 10px; font-weight: bold;">🎨 Color Palette</div>
         <button id="generate-btn" style="
-          padding: 6px 12px;
+          padding: 2px 4px;
           background: ${isDark ? "#4a9eff" : "#2563eb"};
           color: white;
           border: none;
-          border-radius: 4px;
+          border-radius: 3px;
           cursor: pointer;
-          font-size: 12px;
+          font-size: 8px;
+          font-weight: 400;
         ">
           Generate
         </button>
       </div>
       <div id="palette-container" style="
         display: flex;
-        gap: 8px;
+        gap: 4px;
         flex: 1;
       "></div>
     </div>
@@ -86,12 +87,13 @@ export function render(container, options) {
       title="Click to copy ${color}">
         <div style="
           margin-top: auto;
-          padding: 4px 6px;
+          padding: 2px 3px;
           background: rgba(0,0,0,0.5);
           color: white;
-          font-size: 10px;
-          border-radius: 4px;
-          margin-bottom: 4px;
+          font-size: 7px;
+          font-weight: 400;
+          border-radius: 2px;
+          margin-bottom: 2px;
           font-family: 'Monaco', 'Courier New', monospace;
         ">
           ${color}

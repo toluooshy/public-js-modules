@@ -1,6 +1,6 @@
-// News Module for Momentos (Local news with images)
+// Local News Module for Momentos
 export const metadata = {
-  id: "news",
+  id: "local-news",
   name: "Local News",
   description: "Headlines with images based on user location",
   size: "2x2",

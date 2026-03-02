@@ -62,19 +62,19 @@ export function render(container, options) {
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding: 16px;
+      padding: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
-      <div style="font-size: 12px; opacity: 0.6; margin-bottom: 8px;">
+      <div style="font-size: 7px; font-weight: 400; opacity: 0.6; margin-bottom: 2px;">
         Moon Phase
       </div>
-      <div style="font-size: 48px; margin-bottom: 8px;">
+      <div style="font-size: 28px; margin-bottom: 2px;">
         ${phase.emoji}
       </div>
-      <div style="font-size: 12px; opacity: 0.8; text-align: center;">
+      <div style="font-size: 7px; font-weight: 400; opacity: 0.8; text-align: center;">
         ${phase.name}
       </div>
     </div>

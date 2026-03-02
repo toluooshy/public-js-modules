@@ -26,29 +26,30 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 14px; font-weight: bold;">💣 Minesweeper</div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-          <div style="font-size: 12px;">Mines: ${MINES}</div>
+        <div style="font-size: 9px; font-weight: bold;">💣 Minesweeper</div>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <div style="font-size: 8px; font-weight: 400;">Mines: ${MINES}</div>
           <button id="restart-btn" style="
-            padding: 4px 8px;
+            padding: 2px 4px;
             background: ${isDark ? "#4a9eff" : "#2563eb"};
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 7px;
+            font-weight: 400;
           ">
             New Game
           </button>
@@ -58,12 +59,12 @@ export function render(container, options) {
         flex: 1;
         display: grid;
         grid-template-columns: repeat(${COLS}, 1fr);
-        gap: 2px;
+        gap: 1px;
         background: ${isDark ? "#333" : "#999"};
-        padding: 2px;
-        border-radius: 4px;
+        padding: 1px;
+        border-radius: 3px;
       "></div>
-      <div style="font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: center;">
+      <div style="font-size: 7px; font-weight: 400; opacity: 0.6; margin-top: 2px; text-align: center;">
         Click to reveal • Right-click to flag
       </div>
     </div>
@@ -218,10 +219,10 @@ export function render(container, options) {
                 : "#bbb"
           };
           color: ${numberColors[value] || "#000"};
-          font-size: 12px;
-          font-weight: bold;
+          font-size: 8px;
+          font-weight: 400;
           cursor: ${gameOver || isRevealed ? "default" : "pointer"};
-          border-radius: 2px;
+          border-radius: 1px;
         `;
 
         if (isFlagged) {

@@ -18,35 +18,37 @@ export async function render(container, options) {
       justify-content: center;
       align-items: center;
       height: 100%;
-      padding: 20px;
+      padding: 8px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
       text-align: center;
     ">
       <div id="quote-text" style="
-        font-size: 16px;
+        font-size: 9px;
+        font-weight: 400;
         font-style: italic;
-        margin-bottom: 12px;
-        line-height: 1.5;
+        margin-bottom: 4px;
+        line-height: 1.3;
       ">
         Loading quote...
       </div>
       <div id="quote-author" style="
-        font-size: 13px;
+        font-size: 8px;
+        font-weight: 400;
         opacity: 0.7;
-        font-weight: 500;
       "></div>
       <button id="new-quote-btn" style="
-        margin-top: 12px;
-        padding: 6px 12px;
+        margin-top: 4px;
+        padding: 3px 6px;
         background: ${isDark ? "#4a9eff" : "#2563eb"};
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 8px;
+        font-weight: 400;
         opacity: 0.8;
         transition: opacity 0.2s;
       ">

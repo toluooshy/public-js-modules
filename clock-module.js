@@ -59,8 +59,8 @@ export function render(container, options) {
       hour12: true,
     });
     clockEl.innerHTML = `
-      <div style="opacity:0.5; font-size:${Math.max(8, 20 * scale - 8)}px;">${dateStr}</div>
-      <div style="font-size:${Math.max(16, 20 * scale)}px;">${timeStr}</div>
+      <div style="opacity:0.5; font-size:${Math.max(8, 20 * scale - 8)}px; font-weight: 400;">${dateStr}</div>
+      <div style="font-size:${Math.max(16, 20 * scale)}px; font-weight: 400;">${timeStr}</div>
     `;
   }
 

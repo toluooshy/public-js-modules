@@ -21,27 +21,28 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 14px; font-weight: bold;">🧠 Memory Game</div>
+        <div style="font-size: 10px; font-weight: bold;">🧠 Memory</div>
         <button id="restart-btn" style="
-          padding: 4px 8px;
+          padding: 2px 4px;
           background: ${isDark ? "#4a9eff" : "#2563eb"};
           color: white;
           border: none;
-          border-radius: 4px;
+          border-radius: 3px;
           cursor: pointer;
-          font-size: 11px;
+          font-size: 7px;
+          font-weight: 400;
         ">
           Restart
         </button>
@@ -49,13 +50,14 @@ export function render(container, options) {
       <div id="game-grid" style="
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
+        gap: 4px;
         flex: 1;
       "></div>
       <div id="status" style="
         text-align: center;
-        margin-top: 8px;
-        font-size: 12px;
+        margin-top: 4px;
+        font-size: 8px;
+        font-weight: 400;
         opacity: 0.7;
       ">
         Match all pairs!
@@ -77,9 +79,9 @@ export function render(container, options) {
       align-items: center;
       justify-content: center;
       background: ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"};
-      border-radius: 8px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 16px;
       transition: all 0.3s;
     `;
     card.textContent = "?";

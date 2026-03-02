@@ -20,27 +20,28 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 12px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
       ">
-        <div style="font-size: 16px; font-weight: bold;">Sudoku</div>
+        <div style="font-size: 10px; font-weight: bold;">Sudoku</div>
         <button id="new-game-btn" style="
-          padding: 4px 8px;
+          padding: 2px 4px;
           background: ${isDark ? "#4a9eff" : "#2563eb"};
           color: white;
           border: none;
-          border-radius: 4px;
+          border-radius: 3px;
           cursor: pointer;
-          font-size: 11px;
+          font-size: 7px;
+          font-weight: 400;
         ">
           New Game
         </button>
@@ -48,10 +49,10 @@ export function render(container, options) {
       <div id="sudoku-board" style="
         display: grid;
         grid-template-columns: repeat(9, 1fr);
-        gap: 1px;
+        gap: 0.5px;
         background: ${isDark ? "#666" : "#ccc"};
-        border: 2px solid ${isDark ? "#666" : "#333"};
-        margin-bottom: 8px;
+        border: 1px solid ${isDark ? "#666" : "#333"};
+        margin-bottom: 4px;
         aspect-ratio: 1;
       "></div>
       <div style="
@@ -113,7 +114,7 @@ export function render(container, options) {
           background: ${isSelected ? (isDark ? "#4a9eff" : "#93c5fd") : isDark ? "#2a2a2a" : "#fff"};
           color: ${isFixed ? (isDark ? "#60a5fa" : "#2563eb") : isDark ? "#fff" : "#000"};
           font-size: 14px;
-          font-weight: ${isFixed ? "bold" : "normal"};
+          font-weight: 400;
           cursor: ${isFixed ? "default" : "pointer"};
           ${(j + 1) % 3 === 0 && j < 8 ? `border-right: 2px solid ${isDark ? "#666" : "#333"};` : ""}
           ${(i + 1) % 3 === 0 && i < 8 ? `border-bottom: 2px solid ${isDark ? "#666" : "#333"};` : ""}
@@ -142,10 +143,10 @@ export function render(container, options) {
         background: ${isDark ? "#4a9eff" : "#2563eb"};
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 2px;
         cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
+        font-size: 9px;
+        font-weight: 400;
       `;
 
       btn.addEventListener("click", () => {

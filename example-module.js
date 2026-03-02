@@ -38,7 +38,7 @@ export function render(container, options) {
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">
-      <div style="font-size: 14px; opacity: 0.7; margin-bottom: 10px;">
+      <div style="font-size: 14px; font-weight: 400; opacity: 0.7; margin-bottom: 10px;">
         Remote Module Example
       </div>
       <div style="font-size: 48px; font-weight: bold; margin-bottom: 20px;" id="counter">
@@ -52,7 +52,7 @@ export function render(container, options) {
         border-radius: 6px;
         cursor: pointer;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 400;
       ">
         Increment
       </button>

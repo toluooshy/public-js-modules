@@ -3,7 +3,7 @@ export const metadata = {
   id: "word-of-day",
   name: "Word of the Day",
   description: "Learn a new word every day",
-  size: "2x1",
+  size: "2x2",
   links: [
     { label: "Random Word API", url: "https://random-word-api.herokuapp.com/" },
   ],
@@ -19,37 +19,39 @@ export async function render(container, options) {
       flex-direction: column;
       justify-content: center;
       height: 100%;
-      padding: 16px;
+      padding: 8px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
-      <div style="font-size: 14px; font-weight: bold; margin-bottom: 12px;">
+      <div style="font-size: 10px; font-weight: bold; margin-bottom: 4px;">
         📚 Word of the Day
       </div>
       <div id="word" style="
-        font-size: 24px;
+        font-size: 14px;
         font-weight: bold;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         color: ${isDark ? "#60a5fa" : "#2563eb"};
       ">
         Loading...
       </div>
       <div id="definition" style="
-        font-size: 13px;
-        line-height: 1.5;
+        font-size: 8px;
+        font-weight: 400;
+        line-height: 1.3;
         opacity: 0.8;
       "></div>
       <button id="new-word-btn" style="
-        margin-top: 12px;
-        padding: 6px 12px;
+        margin-top: 4px;
+        padding: 3px 6px;
         background: ${isDark ? "#4a9eff" : "#2563eb"};
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 8px;
+        font-weight: 400;
         align-self: flex-start;
       ">
         New Word

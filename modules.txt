@@ -1,7 +1,7 @@
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/example-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/clock-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/weather-module.js
-https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/news-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/local-news-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/flappy-bird-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/2048-game-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/sudoku-module.js

@@ -81,19 +81,19 @@ export function render(container, options) {
         
         @keyframes swim {
           0% {
-            transform: translateX(0) scaleX(1);
+            transform: translateX(0) scaleX(-1);
           }
           100% {
-            transform: translateX(var(--swim-distance)) scaleX(1);
+            transform: translateX(var(--swim-distance)) scaleX(-1);
           }
         }
         
         @keyframes swim-reverse {
           0% {
-            transform: translateX(0) scaleX(-1);
+            transform: translateX(0) scaleX(1);
           }
           100% {
-            transform: translateX(var(--swim-distance)) scaleX(-1);
+            transform: translateX(var(--swim-distance)) scaleX(1);
           }
         }
       </style>

@@ -18,19 +18,19 @@ export async function render(container, options) {
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding: 16px;
+      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 8px;
+      border-radius: 6px;
     ">
-      <div style="font-size: 12px; opacity: 0.6; margin-bottom: 8px;">
+      <div style="font-size: 8px; font-weight: 400; opacity: 0.6; margin-bottom: 4px;">
         S&P 500
       </div>
-      <div id="sp500-price" style="font-size: 24px; font-weight: bold; margin-bottom: 4px;">
+      <div id="sp500-price" style="font-size: 14px; font-weight: bold; margin-bottom: 2px;">
         Loading...
       </div>
-      <div id="sp500-change" style="font-size: 14px;"></div>
+      <div id="sp500-change" style="font-size: 8px; font-weight: 400;"></div>
     </div>
   `;
 
@@ -39,16 +39,16 @@ export async function render(container, options) {
 
   async function fetchSP500() {
     try {
-      // Using Yahoo Finance alternative API
+      // Using Yahoo Finance API - ^GSPC is the S&P 500 ticker
       const response = await fetch(
-        "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?interval=1d&range=1d",
+        "https://query1.finance.yahoo.com/v8/finance/chart/^GSPC?interval=1d&range=1d",
       );
       const data = await response.json();
 
       const quote = data.chart.result[0];
       const meta = quote.meta;
       const price = meta.regularMarketPrice;
-      const previousClose = meta.chartPreviousClose;
+      const previousClose = meta.chartPreviousClose || meta.previousClose;
       const change = price - previousClose;
       const changePercent = (change / previousClose) * 100;
 
