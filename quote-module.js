@@ -40,16 +40,13 @@ export async function render(container, options) {
       "></div>
       <button id="new-quote-btn" style="
         margin-top: 4px;
-        padding: 3px 6px;
-        background: transparent;
+        background: none;
+        border: none;
         color: ${isDark ? "#ffffff" : "#1a1a1a"};
-        border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
-        border-radius: 3px;
         cursor: pointer;
-        font-size: 8px;
-        font-weight: 400;
-        opacity: 0.8;
-        transition: opacity 0.2s;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 0;
       ">
         New Quote
       </button>

@@ -20,6 +20,7 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
+      padding: 6px;
       border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -86,7 +87,6 @@ export function render(container, options) {
           color: ${isFixed ? (isDark ? "#60a5fa" : "#2563eb") : isDark ? "#fff" : "#000"};
           font-size: 14px;
           font-weight: 400;
-          cursor: ${isFixed ? "default" : "pointer"};
           ${(j + 1) % 3 === 0 && j < 8 ? `border-right: 2px solid ${isDark ? "#666" : "#333"};` : ""}
           ${(i + 1) % 3 === 0 && i < 8 ? `border-bottom: 2px solid ${isDark ? "#666" : "#333"};` : ""}
         `;

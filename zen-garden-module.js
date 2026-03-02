@@ -23,20 +23,20 @@ export function render(container, options) {
     ">
       <div style="
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        gap: 8px;
         margin-bottom: 4px;
       ">
-        <div style="font-size: 10px; font-weight: bold;">🪨 Zen Garden</div>
+        <div style="font-size: 10px; font-weight: 400;">🧿 Zen Garden</div>
         <button id="clear-btn" style="
-          padding: 2px 4px;
-          background: ${isDark ? "#4a9eff" : "#2563eb"};
-          color: white;
+          background: none;
           border: none;
-          border-radius: 3px;
+          color: ${isDark ? "#ffffff" : "#1a1a1a"};
           cursor: pointer;
-          font-size: 7px;
-          font-weight: 400;
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
         ">
           Clear
         </button>

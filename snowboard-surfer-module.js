@@ -32,13 +32,14 @@ export function render(container, options) {
     ">
       <div style="
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        gap: 8px;
         margin-bottom: 4px;
         z-index: 10;
       ">
-        <div style="font-size: 10px; font-weight: bold;">🏂 Snowboard</div>
-        <div style="font-size: 10px; font-weight: 400; margin-right: 12px;">Score: <span id="score">0</span></div>
+        <div style="font-size: 10px; font-weight: 400;">🏂 Snowboard Surfer</div>
+        <div style="font-size: 10px; font-weight: 400;">Score: <span id="score">0</span></div>
       </div>
       
       <div id="game-container" style="
@@ -92,14 +93,13 @@ export function render(container, options) {
           <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">Game Over!</div>
           <div style="font-size: 9px; font-weight: 400; margin-bottom: 6px;">Score: <span id="final-score">0</span></div>
           <button id="restart-btn" style="
-            padding: 4px 8px;
-            background: #4a9eff;
-            color: white;
+            background: none;
             border: none;
-            border-radius: 3px;
+            color: white;
             cursor: pointer;
-            font-size: 9px;
-            font-weight: 400;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 0;
           ">Play Again</button>
         </div>
         
@@ -123,14 +123,13 @@ export function render(container, options) {
             Avoid obstacles!
           </div>
           <button id="start-btn" style="
-            padding: 4px 8px;
-            background: #4a9eff;
-            color: white;
+            background: none;
             border: none;
-            border-radius: 3px;
+            color: white;
             cursor: pointer;
-            font-size: 9px;
-            font-weight: 400;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 0;
           ">Start Game</button>
         </div>
       </div>

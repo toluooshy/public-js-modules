@@ -38,16 +38,24 @@ export function render(container, options) {
     ">
       <div style="
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        gap: 8px;
         margin-bottom: 4px;
       ">
         <div style="font-size: 10px; font-weight: 400;">🎨 Color Palette</div>
         <button id="new-palette-btn" style="
-          padding: 2px 4px;
-          margin-right: 12px;
-          background: transparent;
+          background: none;
+          border: none;
           color: ${isDark ? "#ffffff" : "#1a1a1a"};
+          cursor: pointer;
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
+        ">
+          New Palette
+        </button>
+      </div>
           border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
           border-radius: 3px;
           cursor: pointer;

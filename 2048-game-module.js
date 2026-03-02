@@ -27,27 +27,24 @@ export function render(container, options) {
     ">
       <div style="
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        gap: 8px;
         margin-bottom: 4px;
       ">
         <div style="font-size: 11px; font-weight: 400;">2048</div>
-        <div style="display: flex; gap: 4px; align-items: center;">
-          <div style="font-size: 9px; font-weight: 400;">Score: <span id="score">0</span></div>
-          <button id="restart-btn" style="
-            padding: 2px 4px;
-            margin-right: 12px;
-            background: transparent;
-            color: ${isDark ? "#ffffff" : "#1a1a1a"};
-            border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 7px;
-            font-weight: 400;
-          ">
-            New Game
-          </button>
-        </div>
+        <div style="font-size: 9px; font-weight: 400;">Score: <span id="score">0</span></div>
+        <button id="restart-btn" style="
+          background: none;
+          border: none;
+          color: ${isDark ? "#ffffff" : "#1a1a1a"};
+          cursor: pointer;
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
+        ">
+          New Game
+        </button>
       </div>
       <div id="game-board" style="
         flex: 1;
@@ -57,6 +54,9 @@ export function render(container, options) {
         background: ${isDark ? "rgba(0,0,0,0.2)" : "rgba(187,173,160,0.4)"};
         padding: 4px;
         border-radius: 4px;
+        max-width: 95%;
+        max-height: 95%;
+        margin: auto;
       "></div>
       <div id="game-over" style="
         display: none;

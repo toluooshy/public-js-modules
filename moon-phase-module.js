@@ -14,8 +14,8 @@ export function render(container, options) {
   // Calculate moon phase
   function getMoonPhase() {
     const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
     const day = date.getDate();
 
     let c = 0,

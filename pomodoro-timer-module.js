@@ -43,28 +43,26 @@ export function render(container, options) {
       ">
         25:00
       </div>
-      <div style="display: flex; gap: 4px;">
+      <div style="display: flex; gap: 6px;">
         <button id="start-btn" style="
-          padding: 2px 4px;
-          background: ${isDark ? "#10b981" : "#059669"};
-          color: white;
+          background: none;
           border: none;
-          border-radius: 2px;
+          color: ${isDark ? "#10b981" : "#059669"};
           cursor: pointer;
-          font-size: 7px;
-          font-weight: 400;
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
         ">
           Start
         </button>
         <button id="reset-btn" style="
-          padding: 2px 4px;
-          background: ${isDark ? "#ef4444" : "#dc2626"};
-          color: white;
+          background: none;
           border: none;
-          border-radius: 2px;
+          color: ${isDark ? "#ef4444" : "#dc2626"};
           cursor: pointer;
-          font-size: 7px;
-          font-weight: 400;
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
         ">
           Reset
         </button>
