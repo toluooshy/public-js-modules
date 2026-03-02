@@ -20,6 +20,8 @@ export function render(container, options) {
   let obstacles = [];
   let gameSpeed = 2; // start slower
   let gameTime = 0; // track time for gradual speed increase
+  let lastSpawnY = 0; // track last obstacle spawn position
+  let lastPattern = null; // track last obstacle pattern
   let animationFrame;
 
   container.innerHTML = `
@@ -165,27 +167,72 @@ export function render(container, options) {
     }
   }
 
-  function createObstacle() {
-    const lane = Math.floor(Math.random() * 3);
-    const type =
-      obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+  // Valid obstacle patterns (never all 3 lanes)
+  const validPatterns = [
+    [0, 0, 1], // only right
+    [0, 1, 0], // only middle
+    [1, 0, 0], // only left
+    [1, 0, 1], // left and right
+    [1, 1, 0], // left and middle
+    [0, 1, 1], // middle and right
+  ];
 
-    const obstacle = document.createElement("div");
+  function createObstacleWave(pattern) {
     const containerHeight = gameContainer.clientHeight;
-    obstacle.style.cssText = `
-      position: absolute;
-      bottom: -50px;
-      left: ${lanes[lane]}%;
-      transform: translateX(-50%);
-      font-size: 40px;
-      z-index: 4;
-      text-align: center;
-    `;
-    obstacle.textContent = type;
-    obstacle.dataset.lane = lane;
+    const spawnY = containerHeight + 50;
 
-    obstaclesEl.appendChild(obstacle);
-    obstacles.push({ el: obstacle, lane, y: containerHeight + 50 });
+    pattern.forEach((hasObstacle, laneIndex) => {
+      if (hasObstacle === 1) {
+        const type =
+          obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+
+        const obstacle = document.createElement("div");
+        obstacle.style.cssText = `
+          position: absolute;
+          bottom: -50px;
+          left: ${lanes[laneIndex]}%;
+          transform: translateX(-50%);
+          font-size: 40px;
+          z-index: 4;
+          text-align: center;
+        `;
+        obstacle.textContent = type;
+        obstacle.dataset.lane = laneIndex;
+
+        obstaclesEl.appendChild(obstacle);
+        obstacles.push({ el: obstacle, lane: laneIndex, y: spawnY });
+      }
+    });
+
+    lastSpawnY = spawnY;
+    lastPattern = pattern;
+  }
+
+  function getNextPattern() {
+    // Get patterns that leave at least one lane open with previous pattern
+    let availablePatterns = validPatterns.filter((pattern) => {
+      if (!lastPattern) return true;
+
+      // Check if at least one lane is clear in both patterns
+      let hasCommonClearLane = false;
+      for (let i = 0; i < 3; i++) {
+        if (lastPattern[i] === 0 && pattern[i] === 0) {
+          hasCommonClearLane = true;
+          break;
+        }
+      }
+
+      return hasCommonClearLane;
+    });
+
+    // Fallback to all patterns if none available
+    if (availablePatterns.length === 0) {
+      availablePatterns = validPatterns;
+    }
+
+    return availablePatterns[
+      Math.floor(Math.random() * availablePatterns.length)
+    ];
   }
 
   function gameLoop() {
@@ -231,9 +278,12 @@ export function render(container, options) {
       }
     });
 
-    // Create new obstacles
-    if (Math.random() < 0.02) {
-      createObstacle();
+    // Create new obstacle waves at consistent intervals
+    const containerHeight = gameContainer.clientHeight;
+    const spawnInterval = 80; // pixels between waves
+    if (containerHeight - lastSpawnY > spawnInterval) {
+      const pattern = getNextPattern();
+      createObstacleWave(pattern);
     }
 
     animationFrame = requestAnimationFrame(gameLoop);
@@ -249,6 +299,8 @@ export function render(container, options) {
     obstacles = [];
     gameSpeed = 2; // start slow
     gameTime = 0;
+    lastSpawnY = 0;
+    lastPattern = null;
     scoreEl.textContent = "0";
     obstaclesEl.innerHTML = "";
     startScreen.style.display = "none";
