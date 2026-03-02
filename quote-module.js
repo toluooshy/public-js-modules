@@ -59,13 +59,17 @@ export async function render(container, options) {
 
   async function fetchQuote() {
     try {
-      const response = await fetch(
-        "https://api.quotable.io/random?maxLength=150",
-      );
+      const response = await fetch("https://api.api-ninjas.com/v1/quotes", {
+        headers: { "X-Api-Key": "demo" },
+      });
       const data = await response.json();
 
-      quoteText.textContent = `"${data.content}"`;
-      quoteAuthor.textContent = `— ${data.author}`;
+      if (data && data[0]) {
+        quoteText.textContent = `"${data[0].quote}"`;
+        quoteAuthor.textContent = `— ${data[0].author}`;
+      } else {
+        throw new Error("No quote data");
+      }
     } catch (error) {
       quoteText.textContent = "Unable to load quote";
       quoteAuthor.textContent = "";

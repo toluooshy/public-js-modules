@@ -18,7 +18,8 @@ export function render(container, options) {
   let playerEmoji = "⛷️"; // randomly chosen each game
   let isJumping = false;
   let obstacles = [];
-  let gameSpeed = 5;
+  let gameSpeed = 2; // start slower
+  let gameTime = 0; // track time for gradual speed increase
   let animationFrame;
 
   container.innerHTML = `
@@ -67,7 +68,7 @@ export function render(container, options) {
         <!-- Player -->
         <div id="player" style="
           position: absolute;
-          top: 80px;
+          top: 20px;
           left: 50%;
           transform: translateX(-50%);
           font-size: 40px;
@@ -153,7 +154,7 @@ export function render(container, options) {
 
   function updatePlayerPosition() {
     playerEl.style.left = `${lanes[playerLane]}%`;
-    playerEl.style.top = isJumping ? "20px" : "80px";
+    playerEl.style.top = isJumping ? "5px" : "20px";
     playerEl.textContent = playerEmoji;
 
     // Flip emoji based on direction
@@ -190,13 +191,19 @@ export function render(container, options) {
   function gameLoop() {
     if (!gameRunning) return;
 
+    // Gradually increase speed over time
+    gameTime++;
+    if (gameTime % 100 === 0) {
+      gameSpeed += 0.15;
+    }
+
     // Move obstacles upward (downhill feel)
     obstacles.forEach((obs, index) => {
       obs.y -= gameSpeed;
       obs.el.style.bottom = `${gameContainer.clientHeight - obs.y}px`;
 
       // Check collision
-      const playerTop = isJumping ? 20 : 80;
+      const playerTop = isJumping ? 5 : 20;
       const playerBottom = playerTop + 40;
       const obsTop = obs.y - 40;
       const obsBottom = obs.y;
@@ -215,11 +222,6 @@ export function render(container, options) {
         obs.scored = true;
         score += 10;
         scoreEl.textContent = score;
-
-        // Increase difficulty
-        if (score % 100 === 0) {
-          gameSpeed += 0.5;
-        }
       }
 
       // Remove off-screen obstacles
@@ -245,7 +247,8 @@ export function render(container, options) {
     playerEmoji = Math.random() < 0.5 ? "⛷️" : "🏂"; // randomly choose skier or snowboarder
     isJumping = false;
     obstacles = [];
-    gameSpeed = 5;
+    gameSpeed = 2; // start slow
+    gameTime = 0;
     scoreEl.textContent = "0";
     obstaclesEl.innerHTML = "";
     startScreen.style.display = "none";
