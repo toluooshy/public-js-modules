@@ -26,6 +26,8 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
+      padding: 6px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">

@@ -18,6 +18,7 @@ export function render(container, options) {
       justify-content: center;
       height: 100%;
       padding: 16px;
+      border-radius: 4px;
     ">
       <svg id="clock-svg" width="100%" height="100%" viewBox="0 0 200 200">
         <!-- Clock face -->

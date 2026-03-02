@@ -21,6 +21,7 @@ export function render(container, options) {
       flex-direction: column;
       height: 100%;
       padding: 6px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">
@@ -35,6 +36,7 @@ export function render(container, options) {
           <div style="font-size: 9px; font-weight: 400;">Score: <span id="score">0</span></div>
           <button id="restart-btn" style="
             padding: 2px 4px;
+            margin-right: 12px;
             background: transparent;
             color: ${isDark ? "#ffffff" : "#1a1a1a"};
             border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
@@ -214,14 +216,39 @@ export function render(container, options) {
     return true;
   }
 
-  // Keyboard controls
-  function handleKey(e) {
-    if (gameOver) return;
-    if (e.key === "ArrowLeft") move("left");
-    else if (e.key === "ArrowRight") move("right");
-    else if (e.key === "ArrowUp") move("up");
-    else if (e.key === "ArrowDown") move("down");
-  }
+  // Mouse swipe controls
+  let mouseStartX = 0;
+  let mouseStartY = 0;
+  let isMouseDown = false;
+
+  boardEl.addEventListener("mousedown", (e) => {
+    isMouseDown = true;
+    mouseStartX = e.clientX;
+    mouseStartY = e.clientY;
+  });
+
+  boardEl.addEventListener("mouseup", (e) => {
+    if (!isMouseDown || gameOver) return;
+    isMouseDown = false;
+
+    const mouseEndX = e.clientX;
+    const mouseEndY = e.clientY;
+    const dx = mouseEndX - mouseStartX;
+    const dy = mouseEndY - mouseStartY;
+
+    // Minimum swipe distance
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+      if (Math.abs(dx) > Math.abs(dy)) {
+        move(dx > 0 ? "right" : "left");
+      } else {
+        move(dy > 0 ? "down" : "up");
+      }
+    }
+  });
+
+  boardEl.addEventListener("mouseleave", () => {
+    isMouseDown = false;
+  });
 
   // Touch controls
   let touchStartX = 0;
@@ -246,12 +273,7 @@ export function render(container, options) {
     }
   });
 
-  document.addEventListener("keydown", handleKey);
   restartBtn.addEventListener("click", initGrid);
 
   initGrid();
-
-  return () => {
-    document.removeEventListener("keydown", handleKey);
-  };
 }

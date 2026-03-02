@@ -25,6 +25,7 @@ export function render(container, options) {
       flex-direction: column;
       height: 100%;
       padding: 6px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       position: relative;
@@ -37,7 +38,7 @@ export function render(container, options) {
         z-index: 10;
       ">
         <div style="font-size: 10px; font-weight: bold;">🏂 Snowboard</div>
-        <div style="font-size: 10px; font-weight: 400;">Score: <span id="score">0</span></div>
+        <div style="font-size: 10px; font-weight: 400; margin-right: 12px;">Score: <span id="score">0</span></div>
       </div>
       
       <div id="game-container" style="
@@ -117,8 +118,8 @@ export function render(container, options) {
         ">
           <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Snowboard Surfer</div>
           <div style="font-size: 8px; font-weight: 400; margin-bottom: 6px; opacity: 0.8;">
-            ← → to switch lanes<br>
-            ↑ to jump<br>
+            Swipe left/right to switch lanes<br>
+            Swipe up to jump<br>
             Avoid obstacles!
           </div>
           <button id="start-btn" style="
@@ -247,16 +248,37 @@ export function render(container, options) {
     gameOverEl.style.display = "block";
   }
 
-  function handleKey(e) {
-    if (!gameRunning) return;
+  // Mouse swipe controls
+  let mouseStartX = 0;
+  let mouseStartY = 0;
+  let isMouseDown = false;
 
-    if (e.key === "ArrowLeft" && playerLane > 0) {
-      playerLane--;
-      updatePlayerPosition();
-    } else if (e.key === "ArrowRight" && playerLane < 2) {
-      playerLane++;
-      updatePlayerPosition();
-    } else if (e.key === "ArrowUp" && !isJumping) {
+  gameContainer.addEventListener("mousedown", (e) => {
+    isMouseDown = true;
+    mouseStartX = e.clientX;
+    mouseStartY = e.clientY;
+  });
+
+  gameContainer.addEventListener("mouseup", (e) => {
+    if (!isMouseDown || !gameRunning) return;
+    isMouseDown = false;
+
+    const mouseEndX = e.clientX;
+    const mouseEndY = e.clientY;
+    const dx = mouseEndX - mouseStartX;
+    const dy = mouseEndY - mouseStartY;
+
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
+      // Horizontal swipe
+      if (dx > 0 && playerLane < 2) {
+        playerLane++;
+        updatePlayerPosition();
+      } else if (dx < 0 && playerLane > 0) {
+        playerLane--;
+        updatePlayerPosition();
+      }
+    } else if (dy < -20 && !isJumping) {
+      // Swipe up to jump
       isJumping = true;
       updatePlayerPosition();
       setTimeout(() => {
@@ -264,7 +286,11 @@ export function render(container, options) {
         updatePlayerPosition();
       }, 400);
     }
-  }
+  });
+
+  gameContainer.addEventListener("mouseleave", () => {
+    isMouseDown = false;
+  });
 
   // Touch controls
   let touchStartX = 0;
@@ -303,14 +329,8 @@ export function render(container, options) {
     }
   });
 
-  document.addEventListener("keydown", handleKey);
   startBtn.addEventListener("click", startGame);
   restartBtn.addEventListener("click", startGame);
 
   updatePlayerPosition();
-
-  return () => {
-    document.removeEventListener("keydown", handleKey);
-    if (animationFrame) cancelAnimationFrame(animationFrame);
-  };
 }

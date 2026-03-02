@@ -18,6 +18,8 @@ export function render(container, options) {
     <div id="aquarium" style="
       position: relative;
       height: 100%;
+      padding: 6px;
+      border-radius: 4px;
       background: ${
         isDark
           ? "linear-gradient(to bottom, #001a33, #003d5c)"

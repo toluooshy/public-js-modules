@@ -43,7 +43,7 @@ export function render(container, options) {
       z-index:2;
       font-family:${FONT_FAMILY};
     "></div>
-    <div style="width:100%; height:100%; position:relative; overflow:hidden;">
+    <div style="width:100%; height:100%; position:relative; overflow:hidden; padding: 6px; border-radius: 4px;">
       <canvas style="
         width:100%;
         height:100%;

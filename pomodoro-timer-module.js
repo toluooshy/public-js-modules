@@ -28,6 +28,7 @@ export function render(container, options) {
       justify-content: center;
       height: 100%;
       padding: 4px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">

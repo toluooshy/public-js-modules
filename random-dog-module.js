@@ -17,6 +17,7 @@ export async function render(container, options) {
       flex-direction: column;
       height: 100%;
       padding: 6px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">
@@ -29,6 +30,7 @@ export async function render(container, options) {
         <div style="font-size: 10px; font-weight: 400;">🐕 Random Dog</div>
         <button id="new-dog-btn" style="
           padding: 2px 4px;
+          margin-right: 12px;
           background: transparent;
           color: ${isDark ? "#ffffff" : "#1a1a1a"};
           border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};

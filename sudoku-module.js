@@ -20,30 +20,23 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">
       <div id="sudoku-board" style="
         width: 100%;
-        height: 70%;
+        height: 100%;
         display: grid;
         grid-template-columns: repeat(9, 1fr);
         gap: 0.5px;
         background: ${isDark ? "#666" : "#ccc"};
         border: 1px solid ${isDark ? "#666" : "#333"};
       "></div>
-      <div style="
-        height: 30%;
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        gap: 2px;
-        margin-top: 2px;
-      " id="number-pad"></div>
     </div>
   `;
 
   const boardEl = container.querySelector("#sudoku-board");
-  const padEl = container.querySelector("#number-pad");
 
   function generateSudoku() {
     // Create a simple valid sudoku (for demo - using a template)
@@ -98,13 +91,59 @@ export function render(container, options) {
           ${(i + 1) % 3 === 0 && i < 8 ? `border-bottom: 2px solid ${isDark ? "#666" : "#333"};` : ""}
         `;
 
-        cell.textContent = value || "";
+        if (isFixed) {
+          cell.textContent = value;
+        } else {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.value = value || "";
+          input.maxLength = 1;
+          input.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            text-align: center;
+            outline: none;
+          `;
 
-        if (!isFixed) {
-          cell.addEventListener("click", () => {
+          input.addEventListener("input", (e) => {
+            const val = e.target.value;
+            if (val && /^[1-9]$/.test(val)) {
+              board[i][j] = parseInt(val);
+
+              // Check if correct
+              if (parseInt(val) === solution[i][j]) {
+                // Check if puzzle is complete
+                if (
+                  board.every((row, ri) =>
+                    row.every((v, ci) => v === solution[ri][ci]),
+                  )
+                ) {
+                  setTimeout(
+                    () => alert("Congratulations! You solved it!"),
+                    100,
+                  );
+                }
+              }
+              renderBoard();
+            } else if (val === "") {
+              board[i][j] = 0;
+              renderBoard();
+            } else {
+              e.target.value = "";
+            }
+          });
+
+          input.addEventListener("focus", () => {
             selected = { i, j };
             renderBoard();
           });
+
+          cell.appendChild(input);
         }
 
         boardEl.appendChild(cell);
@@ -112,46 +151,6 @@ export function render(container, options) {
     }
   }
 
-  function createNumberPad() {
-    for (let num = 1; num <= 9; num++) {
-      const btn = document.createElement("button");
-      btn.textContent = num;
-      btn.style.cssText = `
-        aspect-ratio: 1;
-        background: ${isDark ? "#4a9eff" : "#2563eb"};
-        color: white;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        font-size: 9px;
-        font-weight: 400;
-      `;
-
-      btn.addEventListener("click", () => {
-        if (selected) {
-          board[selected.i][selected.j] = num;
-
-          // Check if correct
-          if (num === solution[selected.i][selected.j]) {
-            // Check if puzzle is complete
-            if (
-              board.every((row, i) =>
-                row.every((val, j) => val === solution[i][j]),
-              )
-            ) {
-              setTimeout(() => alert("Congratulations! You solved it!"), 100);
-            }
-          }
-
-          renderBoard();
-        }
-      });
-
-      padEl.appendChild(btn);
-    }
-  }
-
   generateSudoku();
   renderBoard();
-  createNumberPad();
 }

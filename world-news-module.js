@@ -19,7 +19,8 @@ export async function render(container, options) {
 
   container.innerHTML = `
     <div style="
-      padding: 12px; 
+      padding: ${Math.max(12, 12 * scale)}px;
+      border-radius: 4px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-size: ${Math.max(11, 12 * scale)}px;
@@ -156,6 +157,7 @@ export async function render(container, options) {
     container.innerHTML = `
       <div style="
         padding: ${Math.max(5, 6 * scale)}px;
+        border-radius: 4px;
         overflow-y: auto;
         height: 100%;
         width: 100%;

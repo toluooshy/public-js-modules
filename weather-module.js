@@ -49,7 +49,8 @@ export async function render(container, options) {
   // Initial loading display
   container.innerHTML = `
     <div style="
-      padding: ${Math.max(12, 15 * scale)}px; 
+      padding: ${Math.max(12, 15 * scale)}px;
+      border-radius: 4px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -102,7 +103,8 @@ export async function render(container, options) {
     // 3️⃣ Render weather display
     container.innerHTML = `
       <div style="
-        padding: ${Math.max(4, 8 * scale * 0.8)}px; 
+        padding: ${Math.max(4, 8 * scale * 0.8)}px;
+        border-radius: 4px;
         text-align: center;
         display: flex;
         flex-direction: column;

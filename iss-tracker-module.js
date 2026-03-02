@@ -20,11 +20,12 @@ export async function render(container, options) {
       justify-content: space-between;
       height: 100%;
       padding: 8px;
+      border-radius: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     ">
       <div style="flex: 1;">
-        <div style="font-size: 9px; font-weight: 400; margin-bottom: 4px;">
+        <div style="font-size: 9px; font-weight: 400; margin-bottom: 4px; margin-right: 12px;">
           🛰️ ISS Location
         </div>
         <div id="iss-coords" style="font-size: 8px; font-weight: 400; opacity: 0.7; margin-bottom: 2px;">

@@ -18,6 +18,8 @@ export function render(container, options) {
       justify-content: center;
       height: 100%;
       width: 100%;
+      padding: 6px;
+      border-radius: 4px;
       background: ${isDark ? "#001a33" : "#0033cc"};
       overflow: hidden;
       position: relative;
