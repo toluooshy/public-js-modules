@@ -65,12 +65,12 @@ export function render(container, options) {
         <!-- Player -->
         <div id="player" style="
           position: absolute;
-          bottom: 80px;
+          top: 80px;
           left: 50%;
-          transform: translateX(-50%);
+          transform: translateX(-50%) rotate(180deg);
           font-size: 40px;
           z-index: 5;
-          transition: left 0.05s ease, bottom 0.3s ease;
+          transition: left 0.05s ease, top 0.3s ease;
         ">🏂</div>
         
         <!-- Obstacles container -->
@@ -146,12 +146,12 @@ export function render(container, options) {
   const startBtn = container.querySelector("#start-btn");
   const restartBtn = container.querySelector("#restart-btn");
 
-  const lanes = [30, 50, 70]; // percentage positions
+  const lanes = [16.67, 50, 83.33]; // exact 1/3 positioning for each lane
   const obstacleTypes = ["🌲", "🪨", "⛰️"];
 
   function updatePlayerPosition() {
     playerEl.style.left = `${lanes[playerLane]}%`;
-    playerEl.style.bottom = isJumping ? "140px" : "80px";
+    playerEl.style.top = isJumping ? "20px" : "80px";
   }
 
   function createObstacle() {
@@ -160,11 +160,12 @@ export function render(container, options) {
       obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
 
     const obstacle = document.createElement("div");
+    const containerHeight = gameContainer.clientHeight;
     obstacle.style.cssText = `
       position: absolute;
-      top: -50px;
+      bottom: -50px;
       left: ${lanes[lane]}%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) rotate(180deg);
       font-size: 40px;
       z-index: 4;
       text-align: center;
@@ -173,34 +174,34 @@ export function render(container, options) {
     obstacle.dataset.lane = lane;
 
     obstaclesEl.appendChild(obstacle);
-    obstacles.push({ el: obstacle, lane, y: -50 });
+    obstacles.push({ el: obstacle, lane, y: containerHeight + 50 });
   }
 
   function gameLoop() {
     if (!gameRunning) return;
 
-    // Move obstacles
+    // Move obstacles upward (downhill feel)
     obstacles.forEach((obs, index) => {
-      obs.y += gameSpeed;
-      obs.el.style.top = `${obs.y}px`;
+      obs.y -= gameSpeed;
+      obs.el.style.bottom = `${gameContainer.clientHeight - obs.y}px`;
 
       // Check collision
-      const playerBottom = isJumping ? 140 : 80;
-      const playerTop = playerBottom + 40;
+      const playerTop = isJumping ? 20 : 80;
+      const playerBottom = playerTop + 40;
+      const obsTop = obs.y - 40;
       const obsBottom = obs.y;
-      const obsTop = obs.y + 40;
 
       if (
         obs.lane === playerLane &&
-        obsBottom < playerTop &&
-        obsTop > playerBottom
+        obsBottom > playerTop &&
+        obsTop < playerBottom
       ) {
         endGame();
         return;
       }
 
       // Score when passing obstacle
-      if (obs.y > gameContainer.clientHeight && !obs.scored) {
+      if (obs.y < 0 && !obs.scored) {
         obs.scored = true;
         score += 10;
         scoreEl.textContent = score;
@@ -212,7 +213,7 @@ export function render(container, options) {
       }
 
       // Remove off-screen obstacles
-      if (obs.y > gameContainer.clientHeight + 50) {
+      if (obs.y < -50) {
         obs.el.remove();
         obstacles.splice(index, 1);
       }
@@ -250,83 +251,64 @@ export function render(container, options) {
 
   // Mouse swipe controls
   let mouseStartX = 0;
-  let mouseStartY = 0;
-  let isMouseDown = false;
 
   gameContainer.addEventListener("mousedown", (e) => {
-    isMouseDown = true;
+    if (!gameRunning) return;
     mouseStartX = e.clientX;
-    mouseStartY = e.clientY;
   });
 
-  gameContainer.addEventListener("mouseup", (e) => {
-    if (!isMouseDown || !gameRunning) return;
-    isMouseDown = false;
+  gameContainer.addEventListener("mousemove", (e) => {
+    if (!gameRunning || mouseStartX === 0) return;
 
-    const mouseEndX = e.clientX;
-    const mouseEndY = e.clientY;
-    const dx = mouseEndX - mouseStartX;
-    const dy = mouseEndY - mouseStartY;
+    const dx = e.clientX - mouseStartX;
 
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
-      // Horizontal swipe
-      if (dx > 0 && playerLane < 2) {
-        playerLane++;
-        updatePlayerPosition();
-      } else if (dx < 0 && playerLane > 0) {
-        playerLane--;
-        updatePlayerPosition();
-      }
-    } else if (dy < -10 && !isJumping) {
-      // Swipe up to jump
-      isJumping = true;
+    // Instant lane switching on any horizontal movement
+    if (dx > 5 && playerLane < 2) {
+      playerLane++;
       updatePlayerPosition();
-      setTimeout(() => {
-        isJumping = false;
-        updatePlayerPosition();
-      }, 400);
+      mouseStartX = e.clientX; // Reset for continuous swipes
+    } else if (dx < -5 && playerLane > 0) {
+      playerLane--;
+      updatePlayerPosition();
+      mouseStartX = e.clientX; // Reset for continuous swipes
     }
   });
 
+  gameContainer.addEventListener("mouseup", () => {
+    mouseStartX = 0;
+  });
+
   gameContainer.addEventListener("mouseleave", () => {
-    isMouseDown = false;
+    mouseStartX = 0;
   });
 
   // Touch controls
   let touchStartX = 0;
-  let touchStartY = 0;
 
   gameContainer.addEventListener("touchstart", (e) => {
+    if (!gameRunning) return;
     touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
   });
 
-  gameContainer.addEventListener("touchend", (e) => {
-    if (!gameRunning) return;
+  gameContainer.addEventListener("touchmove", (e) => {
+    if (!gameRunning || touchStartX === 0) return;
 
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-    const dx = touchEndX - touchStartX;
-    const dy = touchEndY - touchStartY;
+    const dx = e.touches[0].clientX - touchStartX;
 
-    if (Math.abs(dx) > Math.abs(dy)) {
-      // Horizontal swipe
-      if (dx > 15 && playerLane < 2) {
-        playerLane++;
-        updatePlayerPosition();
-      } else if (dx < -15 && playerLane > 0) {
-        playerLane--;
-        updatePlayerPosition();
-      }
-    } else if (dy < -15 && !isJumping) {
-      // Swipe up to jump
-      isJumping = true;
+    // Instant lane switching on any horizontal movement
+    if (dx > 5 && playerLane < 2) {
+      playerLane++;
       updatePlayerPosition();
-      setTimeout(() => {
-        isJumping = false;
-        updatePlayerPosition();
-      }, 400);
+      touchStartX = e.touches[0].clientX;
+    } else if (dx < -5 && playerLane > 0) {
+      playerLane--;
+      updatePlayerPosition();
+      touchStartX = e.touches[0].clientX;
     }
+  });
+
+  gameContainer.addEventListener("touchend", () => {
+    touchStartX = 0;
   });
 
   startBtn.addEventListener("click", startGame);
