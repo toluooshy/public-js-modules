@@ -51,6 +51,9 @@ export function render(container, options) {
         grid-template-columns: repeat(4, 1fr);
         gap: 4px;
         flex: 1;
+        max-width: 85%;
+        max-height: 85%;
+        margin: auto;
       "></div>
       <div id="status" style="
         text-align: center;

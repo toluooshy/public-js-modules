@@ -56,15 +56,6 @@ export function render(container, options) {
           New Palette
         </button>
       </div>
-          border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 8px;
-          font-weight: 400;
-        ">
-          Generate
-        </button>
-      </div>
       <div id="palette-container" style="
         display: flex;
         gap: 4px;
@@ -74,7 +65,7 @@ export function render(container, options) {
   `;
 
   const paletteContainer = container.querySelector("#palette-container");
-  const generateBtn = container.querySelector("#generate-btn");
+  const generateBtn = container.querySelector("#new-palette-btn");
 
   function renderPalette() {
     paletteContainer.innerHTML = palette

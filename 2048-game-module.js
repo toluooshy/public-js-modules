@@ -54,9 +54,10 @@ export function render(container, options) {
         background: ${isDark ? "rgba(0,0,0,0.2)" : "rgba(187,173,160,0.4)"};
         padding: 4px;
         border-radius: 4px;
-        max-width: 95%;
-        max-height: 95%;
+        max-width: 85%;
+        max-height: 85%;
         margin: auto;
+        transition: transform 0.1s ease, opacity 0.1s ease;
       "></div>
       <div id="game-over" style="
         display: none;
@@ -141,7 +142,7 @@ export function render(container, options) {
           font-size: ${value > 512 ? "18px" : "24px"};
           font-weight: 400;
           border-radius: 4px;
-          transition: all 0.15s;
+          transition: all 0.2s ease;
         `;
         tile.textContent = value || "";
         boardEl.appendChild(tile);
@@ -225,11 +226,26 @@ export function render(container, options) {
     isMouseDown = true;
     mouseStartX = e.clientX;
     mouseStartY = e.clientY;
+    boardEl.style.opacity = "0.9";
+  });
+
+  boardEl.addEventListener("mousemove", (e) => {
+    if (!isMouseDown) return;
+    const dx = e.clientX - mouseStartX;
+    const dy = e.clientY - mouseStartY;
+
+    // Visual feedback during swipe
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      boardEl.style.transform = `translate(${dx * 0.1}px, ${dy * 0.1}px)`;
+    }
   });
 
   boardEl.addEventListener("mouseup", (e) => {
     if (!isMouseDown || gameOver) return;
     isMouseDown = false;
+
+    boardEl.style.opacity = "1";
+    boardEl.style.transform = "translate(0, 0)";
 
     const mouseEndX = e.clientX;
     const mouseEndY = e.clientY;
@@ -247,15 +263,10 @@ export function render(container, options) {
   });
 
   boardEl.addEventListener("mouseleave", () => {
-    isMouseDown = false;
-  });
-
-  // Touch controls
-  let touchStartX = 0;
-  let touchStartY = 0;
-
-  boardEl.addEventListener("touchstart", (e) => {
-    touchStartX = e.touches[0].clientX;
+    if (isMouseDown) {
+      boardEl.style.opacity = "1";
+      boardEl.style.transform = "translate(0, 0)";
+    }
     touchStartY = e.touches[0].clientY;
   });
 

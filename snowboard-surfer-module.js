@@ -68,9 +68,9 @@ export function render(container, options) {
           bottom: 80px;
           left: 50%;
           transform: translateX(-50%);
-          font-size: 20px;
+          font-size: 40px;
           z-index: 5;
-          transition: left 0.2s ease, bottom 0.3s ease;
+          transition: left 0.05s ease, bottom 0.3s ease;
         ">🏂</div>
         
         <!-- Obstacles container -->
@@ -165,8 +165,9 @@ export function render(container, options) {
       top: -50px;
       left: ${lanes[lane]}%;
       transform: translateX(-50%);
-      font-size: 18px;
+      font-size: 40px;
       z-index: 4;
+      text-align: center;
     `;
     obstacle.textContent = type;
     obstacle.dataset.lane = lane;
@@ -267,7 +268,7 @@ export function render(container, options) {
     const dx = mouseEndX - mouseStartX;
     const dy = mouseEndY - mouseStartY;
 
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
       // Horizontal swipe
       if (dx > 0 && playerLane < 2) {
         playerLane++;
@@ -276,7 +277,7 @@ export function render(container, options) {
         playerLane--;
         updatePlayerPosition();
       }
-    } else if (dy < -20 && !isJumping) {
+    } else if (dy < -10 && !isJumping) {
       // Swipe up to jump
       isJumping = true;
       updatePlayerPosition();
@@ -310,14 +311,14 @@ export function render(container, options) {
 
     if (Math.abs(dx) > Math.abs(dy)) {
       // Horizontal swipe
-      if (dx > 30 && playerLane < 2) {
+      if (dx > 15 && playerLane < 2) {
         playerLane++;
         updatePlayerPosition();
-      } else if (dx < -30 && playerLane > 0) {
+      } else if (dx < -15 && playerLane > 0) {
         playerLane--;
         updatePlayerPosition();
       }
-    } else if (dy < -30 && !isJumping) {
+    } else if (dy < -15 && !isJumping) {
       // Swipe up to jump
       isJumping = true;
       updatePlayerPosition();

@@ -138,12 +138,27 @@ export function render(container, options) {
             }
           });
 
-          input.addEventListener("focus", () => {
+          input.addEventListener("click", (e) => {
+            e.stopPropagation();
             selected = { i, j };
             renderBoard();
+            // Focus the new input after re-render
+            setTimeout(() => {
+              const newInput = boardEl.querySelector(
+                `input[data-pos="${i}-${j}"]`,
+              );
+              if (newInput) newInput.focus();
+            }, 0);
           });
 
+          input.setAttribute("data-pos", `${i}-${j}`);
+
           cell.appendChild(input);
+
+          // Auto-focus if this is the selected cell
+          if (isSelected) {
+            setTimeout(() => input.focus(), 0);
+          }
         }
 
         boardEl.appendChild(cell);
