@@ -1,8 +1,8 @@
-// Snowboard Surfer Game Module for Momentos
+// Downhill Shred Game Module for Momentos
 export const metadata = {
-  id: "snowboard-surfer",
-  name: "Snowboard Surfer",
-  description: "Dodge obstacles while snowboarding downhill",
+  id: "downhill-shred",
+  name: "Downhill Shred",
+  description: "Shred downhill and dodge obstacles",
   size: "2x2",
   links: [],
 };
@@ -14,6 +14,8 @@ export function render(container, options) {
   let gameRunning = false;
   let score = 0;
   let playerLane = 1; // 0 = left, 1 = middle, 2 = right
+  let playerDirection = 0; // -1 = left, 0 = center/neutral, 1 = right
+  let playerEmoji = "⛷️"; // randomly chosen each game
   let isJumping = false;
   let obstacles = [];
   let gameSpeed = 5;
@@ -38,7 +40,7 @@ export function render(container, options) {
         margin-bottom: 4px;
         z-index: 10;
       ">
-        <div style="font-size: 10px; font-weight: 400;">🏂 Snowboard Surfer</div>
+        <div style="font-size: 10px; font-weight: 400;">🏂 Downhill Shred</div>
         <div style="font-size: 10px; font-weight: 400;">Score: <span id="score">0</span></div>
       </div>
       
@@ -67,11 +69,11 @@ export function render(container, options) {
           position: absolute;
           top: 80px;
           left: 50%;
-          transform: translateX(-50%) rotate(180deg);
+          transform: translateX(-50%);
           font-size: 40px;
           z-index: 5;
-          transition: left 0.05s ease, top 0.3s ease;
-        ">🏂</div>
+          transition: left 0.05s ease, top 0.3s ease, transform 0.05s ease;
+        ">⛷️</div>
         
         <!-- Obstacles container -->
         <div id="obstacles"></div>
@@ -116,7 +118,7 @@ export function render(container, options) {
           text-align: center;
           z-index: 20;
         ">
-          <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Snowboard Surfer</div>
+          <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Downhill Shred</div>
           <div style="font-size: 8px; font-weight: 400; margin-bottom: 6px; opacity: 0.8;">
             Swipe left/right to switch lanes<br>
             Swipe up to jump<br>
@@ -152,6 +154,14 @@ export function render(container, options) {
   function updatePlayerPosition() {
     playerEl.style.left = `${lanes[playerLane]}%`;
     playerEl.style.top = isJumping ? "20px" : "80px";
+    playerEl.textContent = playerEmoji;
+
+    // Flip emoji based on direction
+    if (playerDirection === 1) {
+      playerEl.style.transform = "translateX(-50%) scaleX(-1)";
+    } else {
+      playerEl.style.transform = "translateX(-50%)";
+    }
   }
 
   function createObstacle() {
@@ -165,7 +175,7 @@ export function render(container, options) {
       position: absolute;
       bottom: -50px;
       left: ${lanes[lane]}%;
-      transform: translateX(-50%) rotate(180deg);
+      transform: translateX(-50%);
       font-size: 40px;
       z-index: 4;
       text-align: center;
@@ -231,6 +241,8 @@ export function render(container, options) {
     gameRunning = true;
     score = 0;
     playerLane = 1;
+    playerDirection = 0;
+    playerEmoji = Math.random() < 0.5 ? "⛷️" : "🏂"; // randomly choose skier or snowboarder
     isJumping = false;
     obstacles = [];
     gameSpeed = 5;
@@ -251,64 +263,75 @@ export function render(container, options) {
 
   // Mouse swipe controls
   let mouseStartX = 0;
+  let swipeLocked = false;
 
   gameContainer.addEventListener("mousedown", (e) => {
     if (!gameRunning) return;
     mouseStartX = e.clientX;
+    swipeLocked = false;
   });
 
   gameContainer.addEventListener("mousemove", (e) => {
-    if (!gameRunning || mouseStartX === 0) return;
+    if (!gameRunning || mouseStartX === 0 || swipeLocked) return;
 
     const dx = e.clientX - mouseStartX;
 
-    // Instant lane switching on any horizontal movement
-    if (dx > 5 && playerLane < 2) {
+    // One lane switch per swipe
+    if (dx > 30 && playerLane < 2) {
       playerLane++;
+      playerDirection = 1; // moving right
       updatePlayerPosition();
-      mouseStartX = e.clientX; // Reset for continuous swipes
-    } else if (dx < -5 && playerLane > 0) {
+      swipeLocked = true;
+    } else if (dx < -30 && playerLane > 0) {
       playerLane--;
+      playerDirection = -1; // moving left
       updatePlayerPosition();
-      mouseStartX = e.clientX; // Reset for continuous swipes
+      swipeLocked = true;
     }
   });
 
   gameContainer.addEventListener("mouseup", () => {
     mouseStartX = 0;
+    swipeLocked = false;
   });
 
   gameContainer.addEventListener("mouseleave", () => {
     mouseStartX = 0;
+    swipeLocked = false;
   });
 
   // Touch controls
   let touchStartX = 0;
+  let touchSwipeLocked = false;
 
   gameContainer.addEventListener("touchstart", (e) => {
     if (!gameRunning) return;
     touchStartX = e.touches[0].clientX;
+    touchSwipeLocked = false;
   });
 
   gameContainer.addEventListener("touchmove", (e) => {
-    if (!gameRunning || touchStartX === 0) return;
+    if (!gameRunning || touchStartX === 0 || touchSwipeLocked) return;
 
     const dx = e.touches[0].clientX - touchStartX;
 
-    // Instant lane switching on any horizontal movement
-    if (dx > 5 && playerLane < 2) {
+    // One lane switch per swipe
+    if (dx > 30 && playerLane < 2) {
       playerLane++;
+      playerDirection = 1; // moving right
       updatePlayerPosition();
-      touchStartX = e.touches[0].clientX;
-    } else if (dx < -5 && playerLane > 0) {
+      touchSwipeLocked = true;
+    } else if (dx < -30 && playerLane > 0) {
       playerLane--;
+      playerDirection = -1; // moving left
       updatePlayerPosition();
-      touchStartX = e.touches[0].clientX;
+      touchSwipeLocked = true;
     }
   });
 
   gameContainer.addEventListener("touchend", () => {
     touchStartX = 0;
+    touchSwipeLocked = false;
   });
 
   startBtn.addEventListener("click", startGame);
