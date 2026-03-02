@@ -20,7 +20,7 @@ export function render(container, options) {
   let obstacles = [];
   let gameSpeed = 2; // start slower
   let gameTime = 0; // track time for gradual speed increase
-  let lastSpawnY = 0; // track last obstacle spawn position
+  let lastSpawnFrame = 0; // track when we last spawned
   let lastPattern = null; // track last obstacle pattern
   let animationFrame;
 
@@ -50,7 +50,7 @@ export function render(container, options) {
       <div id="game-container" style="
         flex: 1;
         position: relative;
-        background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%);
+        background: linear-gradient(to bottom, #e7e7e7 0%, #cccccc 100%);
         border-radius: 6px;
         overflow: hidden;
       ">
@@ -204,7 +204,6 @@ export function render(container, options) {
       }
     });
 
-    lastSpawnY = spawnY;
     lastPattern = pattern;
   }
 
@@ -279,11 +278,11 @@ export function render(container, options) {
     });
 
     // Create new obstacle waves at consistent intervals
-    const containerHeight = gameContainer.clientHeight;
-    const spawnInterval = 80; // pixels between waves
-    if (containerHeight - lastSpawnY > spawnInterval) {
+    const framesBetweenWaves = 50; // frames between spawning new waves
+    if (gameTime - lastSpawnFrame > framesBetweenWaves) {
       const pattern = getNextPattern();
       createObstacleWave(pattern);
+      lastSpawnFrame = gameTime;
     }
 
     animationFrame = requestAnimationFrame(gameLoop);
@@ -299,7 +298,7 @@ export function render(container, options) {
     obstacles = [];
     gameSpeed = 2; // start slow
     gameTime = 0;
-    lastSpawnY = 0;
+    lastSpawnFrame = 0;
     lastPattern = null;
     scoreEl.textContent = "0";
     obstaclesEl.innerHTML = "";
