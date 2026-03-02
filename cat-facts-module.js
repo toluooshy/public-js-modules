@@ -20,10 +20,8 @@ export async function render(container, options) {
       padding: 8px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
     ">
-      <div style="font-size: 10px; font-weight: bold; margin-bottom: 4px;">
+      <div style="font-size: 10px; font-weight: 400; margin-bottom: 4px;">
         🐱 Cat Fact
       </div>
       <div id="cat-fact" style="
@@ -37,9 +35,9 @@ export async function render(container, options) {
       </div>
       <button id="new-fact-btn" style="
         padding: 3px 6px;
-        background: ${isDark ? "#4a9eff" : "#2563eb"};
-        color: white;
-        border: none;
+        background: transparent;
+        color: ${isDark ? "#ffffff" : "#1a1a1a"};
+        border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
         border-radius: 3px;
         cursor: pointer;
         font-size: 8px;

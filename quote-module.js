@@ -21,8 +21,6 @@ export async function render(container, options) {
       padding: 8px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
       text-align: center;
     ">
       <div id="quote-text" style="
@@ -42,9 +40,9 @@ export async function render(container, options) {
       <button id="new-quote-btn" style="
         margin-top: 4px;
         padding: 3px 6px;
-        background: ${isDark ? "#4a9eff" : "#2563eb"};
-        color: white;
-        border: none;
+        background: transparent;
+        color: ${isDark ? "#ffffff" : "#1a1a1a"};
+        border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
         border-radius: 3px;
         cursor: pointer;
         font-size: 8px;

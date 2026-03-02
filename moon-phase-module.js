@@ -65,8 +65,6 @@ export function render(container, options) {
       padding: 4px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
     ">
       <div style="font-size: 7px; font-weight: 400; opacity: 0.6; margin-bottom: 2px;">
         Moon Phase

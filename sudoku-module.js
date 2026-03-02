@@ -20,52 +20,30 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
     ">
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4px;
-      ">
-        <div style="font-size: 10px; font-weight: bold;">Sudoku</div>
-        <button id="new-game-btn" style="
-          padding: 2px 4px;
-          background: ${isDark ? "#4a9eff" : "#2563eb"};
-          color: white;
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 7px;
-          font-weight: 400;
-        ">
-          New Game
-        </button>
-      </div>
       <div id="sudoku-board" style="
+        width: 100%;
+        height: 70%;
         display: grid;
         grid-template-columns: repeat(9, 1fr);
         gap: 0.5px;
         background: ${isDark ? "#666" : "#ccc"};
         border: 1px solid ${isDark ? "#666" : "#333"};
-        margin-bottom: 4px;
-        aspect-ratio: 1;
       "></div>
       <div style="
+        height: 30%;
         display: grid;
         grid-template-columns: repeat(9, 1fr);
-        gap: 4px;
+        gap: 2px;
+        margin-top: 2px;
       " id="number-pad"></div>
     </div>
   `;
 
   const boardEl = container.querySelector("#sudoku-board");
   const padEl = container.querySelector("#number-pad");
-  const newGameBtn = container.querySelector("#new-game-btn");
 
   function generateSudoku() {
     // Create a simple valid sudoku (for demo - using a template)
@@ -172,12 +150,6 @@ export function render(container, options) {
       padEl.appendChild(btn);
     }
   }
-
-  newGameBtn.addEventListener("click", () => {
-    generateSudoku();
-    selected = null;
-    renderBoard();
-  });
 
   generateSudoku();
   renderBoard();

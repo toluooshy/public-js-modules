@@ -19,7 +19,6 @@ export function render(container, options) {
       height: 100%;
       width: 100%;
       background: ${isDark ? "#001a33" : "#0033cc"};
-      border-radius: 6px;
       overflow: hidden;
       position: relative;
     ">

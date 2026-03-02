@@ -34,8 +34,6 @@ export function render(container, options) {
       padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
     ">
       <div style="
         display: flex;
@@ -43,12 +41,12 @@ export function render(container, options) {
         align-items: center;
         margin-bottom: 4px;
       ">
-        <div style="font-size: 10px; font-weight: bold;">🎨 Color Palette</div>
-        <button id="generate-btn" style="
+        <div style="font-size: 10px; font-weight: 400;">🎨 Color Palette</div>
+        <button id="new-palette-btn" style="
           padding: 2px 4px;
-          background: ${isDark ? "#4a9eff" : "#2563eb"};
-          color: white;
-          border: none;
+          background: transparent;
+          color: ${isDark ? "#ffffff" : "#1a1a1a"};
+          border: 1px solid ${isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"};
           border-radius: 3px;
           cursor: pointer;
           font-size: 8px;

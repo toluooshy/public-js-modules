@@ -23,7 +23,6 @@ export function render(container, options) {
           ? "linear-gradient(to bottom, #001a33, #003d5c)"
           : "linear-gradient(to bottom, #4dd0e1, #0097a7)"
       };
-      border-radius: 8px;
       overflow: hidden;
     ">
       <!-- Bubbles -->

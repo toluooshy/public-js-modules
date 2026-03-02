@@ -26,52 +26,22 @@ export function render(container, options) {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 6px;
       color: ${isDark ? "#ffffff" : "#1a1a1a"};
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
-      border-radius: 6px;
     ">
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4px;
-      ">
-        <div style="font-size: 9px; font-weight: bold;">💣 Minesweeper</div>
-        <div style="display: flex; gap: 4px; align-items: center;">
-          <div style="font-size: 8px; font-weight: 400;">Mines: ${MINES}</div>
-          <button id="restart-btn" style="
-            padding: 2px 4px;
-            background: ${isDark ? "#4a9eff" : "#2563eb"};
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 7px;
-            font-weight: 400;
-          ">
-            New Game
-          </button>
-        </div>
-      </div>
       <div id="game-board" style="
-        flex: 1;
+        width: 100%;
+        height: 100%;
         display: grid;
         grid-template-columns: repeat(${COLS}, 1fr);
         gap: 1px;
         background: ${isDark ? "#333" : "#999"};
         padding: 1px;
-        border-radius: 3px;
       "></div>
-      <div style="font-size: 7px; font-weight: 400; opacity: 0.6; margin-top: 2px; text-align: center;">
-        Click to reveal • Right-click to flag
-      </div>
     </div>
   `;
 
   const boardEl = container.querySelector("#game-board");
-  const restartBtn = container.querySelector("#restart-btn");
 
   function initGame() {
     board = Array(ROWS)
@@ -255,6 +225,5 @@ export function render(container, options) {
     }
   }
 
-  restartBtn.addEventListener("click", initGame);
   initGame();
 }

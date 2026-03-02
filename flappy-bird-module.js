@@ -43,7 +43,7 @@ export function render(container, options) {
       z-index:2;
       font-family:${FONT_FAMILY};
     "></div>
-    <div style="width:100%; height:100%; position:relative; border-radius:6px; overflow:hidden;">
+    <div style="width:100%; height:100%; position:relative; overflow:hidden;">
       <canvas style="
         width:100%;
         height:100%;
@@ -51,7 +51,6 @@ export function render(container, options) {
         background:${isDark ? "#111" : "#87CEEB"};
         position:relative;
         z-index:1;
-        border-radius:6px;
       "></canvas>
     </div>
   `;
