@@ -1,6 +1,6 @@
 // Flappy Bird Module for Momentos
 export const metadata = {
-  id: "flappy",
+  id: "flappy-bird",
   name: "Flappy Bird",
   description: "Tap to keep the bird flying and score points",
   size: "2x2",
