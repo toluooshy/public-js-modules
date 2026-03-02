@@ -6,7 +6,7 @@ https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/fl
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/2048-game-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/sudoku-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/minesweeper-module.js
-https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/snowboard-surfer-module.js
+https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/downhill-shred-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/sp500-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/bitcoin-module.js
 https://raw.githubusercontent.com/toluooshy/public-js-modules/refs/heads/main/world-news-module.js
